@@ -10,6 +10,9 @@ using System.Windows.Forms;
 
 namespace StdPaint
 {
+    /// <summary>
+    /// Allows drawing to the console buffer.
+    /// </summary>
     public static class Painter
     {
         static Thread drawThread, displayThread;
@@ -23,38 +26,98 @@ namespace StdPaint
 
         static ConsoleBuffer backBuffer, activeBuffer, frontBuffer = null;
 
+        static int refreshInterval = 3;
+
+        static ConsoleEventCallback closeEvent = ConsoleCloseEvent;
+
+        /// <summary>
+        /// Raised when the back buffer is about to start redrawing.
+        /// </summary>
         public static event EventHandler Paint;
+
+        /// <summary>
+        /// Raised after Run() is called and before any drawing begins.
+        /// </summary>
         public static event EventHandler Starting;
-        public static event EventHandler<PainterMouseEventArgs> MouseMove, LeftButtonDown, LeftButtonUp, RightButtonDown, RightButtonUp, Scroll;
 
-        private static ConsoleEventCallback closeEvent = ConsoleCloseEvent;
+        /// <summary>
+        /// Raised when the mouse is moved within the console.
+        /// </summary>
+        public static event EventHandler<PainterMouseEventArgs> MouseMove;
 
+        /// <summary>
+        /// Raised when the left mouse button is pressed down.
+        /// </summary>
+        public static event EventHandler<PainterMouseEventArgs> LeftButtonDown;
+
+        /// <summary>
+        /// Raised when the left mouse button is released.
+        /// </summary>
+        public static event EventHandler<PainterMouseEventArgs> LeftButtonUp;
+
+        /// <summary>
+        /// Raised when the right mouse button is pressed down.
+        /// </summary>
+        public static event EventHandler<PainterMouseEventArgs> RightButtonDown;
+
+        /// <summary>
+        /// Raised when the right mouse button is released.
+        /// </summary>
+        public static event EventHandler<PainterMouseEventArgs> RightButtonUp;
+
+        /// <summary>
+        /// Raised when the scroll wheel is moved.
+        /// </summary>
+        public static event EventHandler<PainterMouseEventArgs> Scroll;
+        
+
+        /// <summary>
+        /// Gets the active buffer.
+        /// </summary>
         public static ConsoleBuffer ActiveBuffer
         {
             get { return activeBuffer; }
         }
 
+        /// <summary>
+        /// Gets the back buffer. This buffer contains the final output image.
+        /// </summary>
         public static ConsoleBuffer BackBuffer
         {
             get { return backBuffer; }
         }
 
+        /// <summary>
+        /// Gets the width of the active buffer.
+        /// </summary>
         public static int ActiveBufferWidth
         {
             get { return activeBuffer.Width; }
         }
 
+        /// <summary>
+        /// Gets the height of the active buffer.
+        /// </summary>
         public static int ActiveBufferHeight
         {
             get { return activeBuffer.Height; }
         }
 
+        /// <summary>
+        /// Gets the character and attribute data for the active buffer.
+        /// </summary>
         public static BufferUnitInfo[,] ActiveBufferData
         {
             get { return activeBuffer.Buffer; }
         }
 
-        public static void Run(int width, int height)
+        /// <summary>
+        /// Starts the Painter with the specified size and refresh rate.
+        /// </summary>
+        /// <param name="width">The width of the console, in units.</param>
+        /// <param name="height">The height of the console, in units.</param>
+        /// <param name="bufferRefreshRate">The refresh rate for the back buffer.</param>
+        public static void Run(int width, int height, int bufferRefreshRate)
         {
             Console.CursorVisible = false;
             Console.SetWindowSize(width, height);
@@ -62,6 +125,8 @@ namespace StdPaint
 
             backBuffer = activeBuffer = ConsoleBuffer.CreateScreenBuffer();
             frontBuffer = ConsoleBuffer.CreateScreenBuffer();
+
+            refreshInterval = bufferRefreshRate;
 
             if (Starting != null)
             {
@@ -170,24 +235,21 @@ namespace StdPaint
             }
         }
 
+        /// <summary>
+        /// Gets a boolean value indicating if the Painter is active.
+        /// </summary>
         public static bool Enabled
         {
             get { return enabled; }
         }
 
+        /// <summary>
+        /// Clears the active buffer to the specified attributes.
+        /// </summary>
+        /// <param name="clearAttributes">The attributes to fill the buffer with.</param>
         public static void Clear(BufferUnitAttributes clearAttributes = BufferUnitAttributes.None)
         {
             ActiveBuffer.Clear(clearAttributes);
-        }
-
-        public static void SetUnitAttributes(int x, int y, BufferUnitAttributes attributes)
-        {
-            ActiveBuffer.Buffer[y, x].Attributes = attributes;
-        }
-
-        public static BufferUnitAttributes GetUnitAttributes(int x, int y)
-        {
-            return ActiveBuffer.Buffer[y, x].Attributes;
         }
         
         private static void GraphicsDisplayThread()
@@ -217,7 +279,7 @@ namespace StdPaint
                 }
 
                 Array.Copy(backBuffer.Buffer, frontBuffer.Buffer, backBuffer.Buffer.Length);
-                Thread.Sleep(50);
+                Thread.Sleep(refreshInterval);
             }
         }
 
@@ -226,6 +288,9 @@ namespace StdPaint
             return x >= 0 && x < ActiveBuffer.Width && y >= 0 && y < ActiveBuffer.Height;
         }
 
+        /// <summary>
+        /// Stops the Painter.
+        /// </summary>
         public static void Stop()
         {
             enabled = false;

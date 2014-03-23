@@ -31,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\StdPaint.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -50,11 +51,11 @@
     <Compile Include="BufferUnitInfo.cs" />
     <Compile Include="ConsoleBuffer.cs" />
     <Compile Include="BufferUnitAttributes.cs" />
-    <Compile Include="ConsoleHelper.cs" />
     <Compile Include="COORD.cs" />
     <Compile Include="MouseMessages.cs" />
     <Compile Include="MSLLHOOKSTRUCT.cs" />
     <Compile Include="Native.cs" />
+    <Compile Include="Painter.cs" />
     <Compile Include="PainterMouseEventArgs.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

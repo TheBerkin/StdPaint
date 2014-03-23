@@ -98,6 +98,30 @@ namespace StdPaint
         }
 
         /// <summary>
+        /// Sets the character for a specific unit in the buffer.
+        /// </summary>
+        /// <param name="x">The X coordinate of the unit.</param>
+        /// <param name="y">The Y coordinate of the unit.</param>
+        /// <param name="c">The character to assign to the unit.</param>
+        public void SetUnitCharacter(int x, int y, char c)
+        {
+            if (InBounds(x, y))
+            {
+                _buffer[y, x].CharData = c;
+            }
+        }
+
+        /// <summary>
+        /// Sets the character for a specific unit in the buffer.
+        /// </summary>
+        /// <param name="p">The location of the unit.</param>
+        /// <param name="c">The character to assign to the unit.</param>
+        public void SetUnitCharacter(Point p, char c)
+        {
+            SetUnitCharacter(p.X, p.Y, c);
+        }
+
+        /// <summary>
         /// Returns the attributes for the specified unit.
         /// </summary>
         /// <param name="x">The X coordinate of the unit.</param>

@@ -48,7 +48,7 @@ namespace StdPaint
         public static extern bool SetConsoleCtrlHandler(ConsoleEventCallback callback, bool add);
     }
 
-    public delegate IntPtr WndProcCallback(int nCode, IntPtr wParam, IntPtr lParam);
+    internal delegate IntPtr WndProcCallback(int nCode, IntPtr wParam, IntPtr lParam);
 
-    public delegate bool ConsoleEventCallback(uint code);
+    internal delegate bool ConsoleEventCallback(uint code);
 }

@@ -6,10 +6,16 @@ using System.Threading.Tasks;
 
 namespace StdPaint
 {
+    /// <summary>
+    /// Contains mouse event data for the StdPaint.Painter.
+    /// </summary>
     public class PainterMouseEventArgs : EventArgs
     {
         Point _point;
 
+        /// <summary>
+        /// The location of the cursor, in buffer units.
+        /// </summary>
         public Point UnitLocation
         {
             get { return _point; }

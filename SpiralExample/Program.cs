@@ -34,7 +34,7 @@ namespace SpiralExample
             Painter.LeftButtonDown += Painter_LeftButtonDown;
             Painter.LeftButtonUp += Painter_LeftButtonUp;
 
-            Painter.Run(64, 64);
+            Painter.Run(64, 64, 30);
         }
 
         static bool click = false;
