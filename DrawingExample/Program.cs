@@ -25,7 +25,7 @@ namespace DrawingExample
             Painter.LeftButtonUp += Painter_LeftButtonUp;
             Painter.RightButtonDown += Painter_RightButtonDown;
 
-            Painter.Run(136, 100);
+            Painter.Run(136, 100, 30);
         }
 
         static void Painter_RightButtonDown(object sender, PainterMouseEventArgs e)
