@@ -12,7 +12,10 @@ namespace SpiralExample
         static BufferUnitAttributes[] colors = {
                                                    BufferUnitAttributes.BackgroundBlue | BufferUnitAttributes.BackgroundIntensity,
                                                    BufferUnitAttributes.BackgroundGreen | BufferUnitAttributes.BackgroundIntensity,
-                                                   BufferUnitAttributes.BackgroundRed | BufferUnitAttributes.BackgroundIntensity
+                                                   BufferUnitAttributes.BackgroundRed | BufferUnitAttributes.BackgroundIntensity,
+                                                   BufferUnitAttributes.BackgroundBlue | BufferUnitAttributes.BackgroundRed | BufferUnitAttributes.BackgroundIntensity,
+                                                   BufferUnitAttributes.BackgroundGreen | BufferUnitAttributes.BackgroundBlue | BufferUnitAttributes.BackgroundIntensity,
+                                                   BufferUnitAttributes.BackgroundRed | BufferUnitAttributes.BackgroundGreen | BufferUnitAttributes.BackgroundIntensity
                                                };
 
         static long ticks = 0;
@@ -67,17 +70,29 @@ namespace SpiralExample
             var b = Painter.ActiveBufferData;
             int w = Painter.ActiveBufferWidth;
             int h = Painter.ActiveBufferHeight;
-
+            int o = 0;
+            double d = 0;
             var p = new Point();
             for (int i = 0; i < w; i++)
             for (int j = 0; j < h; j++)
             {
                 p.X = i;
                 p.Y = j;
-                b[j,i].Attributes = colors[(int)((Dist(center, p) + ticks + SpiralOffset(center, p) / 4) / SpiralWidth % colors.Length)];
+                d = Dist(center, p);
+                o = (int)((d + ticks + SpiralOffset(center, p) / 4) / SpiralWidth);
+                if (o % 3 == 0)
+                {
+                    o += SpiralStripeOffset(center, p, d);
+                }
+                b[j, i].Attributes = colors[o % colors.Length];
             }
 
             ticks++;
+        }
+
+        static int SpiralStripeOffset(Point a, Point b, double d)
+        {
+            return (int)((Math.Atan2(b.Y - a.Y, b.X - a.X) + Math.PI + (1.0 / d * 10) + (double)ticks / 15) / (Math.PI / 4)) * 2 % 4;
         }
 
         static double SpiralOffset(Point a, Point b)
