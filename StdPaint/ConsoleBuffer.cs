@@ -614,32 +614,40 @@ namespace StdPaint
             }
             else
             {
-                var w = buffer.Width;
-                var h = buffer.Height;
-                for (int i = 0; i < w; i++)
-                    for (int j = 0; j < h; j++)
-                    {
-                        if (InBounds(x + i, y + j))
-                        {
-                            switch (drawMode)
-                            {
-                                case BufferDrawMode.Additive:
-                                    b[j + y, i + x]._attrs |= b2[j, i]._attrs;
-                                    break;
-                                case BufferDrawMode.DrawOver:
-                                    b[j + y, i + x]._attrs = b2[j, i]._attrs;
-                                    break;
-                                case BufferDrawMode.IgnoreBlack:
-                                    if (b2[j, i].BackColor != BufferColor.Black)
-                                    {
-                                        b[j + y, i + x]._attrs = b2[j, i]._attrs;
-                                    }
-                                    break;
-                            }
+                var w = buffer._width;
+                if (w + x > _width)
+                {
+                    w -= w + x - _width;
+                }
+                if (x < 0)
+                {
 
-                            b[j + y, i + x].CharData = b2[j, i].CharData;
+                }
+                var h = buffer._height;
+                for (int i = w; i >= 0; i--)
+                for (int j = h; j >= 0; j--)
+                {
+                    if (InBounds(x + i, y + j))
+                    {
+                        switch (drawMode)
+                        {
+                            case BufferDrawMode.Additive:
+                                b[j + y, i + x]._attrs |= b2[j, i]._attrs;
+                                break;
+                            case BufferDrawMode.DrawOver:
+                                b[j + y, i + x]._attrs = b2[j, i]._attrs;
+                                break;
+                            case BufferDrawMode.IgnoreBlack:
+                                if (b2[j, i].BackColor != BufferColor.Black)
+                                {
+                                    b[j + y, i + x]._attrs = b2[j, i]._attrs;
+                                }
+                                break;
                         }
+
+                        b[j + y, i + x].CharData = b2[j, i].CharData;
                     }
+                }
             }
         }
 

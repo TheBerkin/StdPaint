@@ -15,7 +15,7 @@ namespace StdPaint
     /// </summary>
     public static class Painter
     {
-        static Thread drawThread;
+        static Thread drawThread, renderThread;
         static IntPtr conHandle = Native.GetStdHandle(-11);
         static bool enabled;
 
@@ -24,7 +24,7 @@ namespace StdPaint
         static WndProcCallback _proc = HookCallback;
         static RECT clientRect;
 
-        static ConsoleBuffer backBuffer, activeBuffer = null;
+        static ConsoleBuffer backBuffer, frontBuffer, activeBuffer = null;
 
         static int refreshInterval = 3;
 
@@ -124,6 +124,7 @@ namespace StdPaint
             Console.SetBufferSize(width, height);
 
             backBuffer = activeBuffer = ConsoleBuffer.CreateScreenBuffer();
+            frontBuffer = ConsoleBuffer.CreateScreenBuffer();
 
             refreshInterval = bufferRefreshRate;
 
@@ -132,9 +133,15 @@ namespace StdPaint
                 Starting(null, null);
             }
 
+            enabled = true;
+
             drawThread = null;
             drawThread = new Thread(GraphicsDrawThread);
             drawThread.Start();
+
+            renderThread = null;
+            renderThread = new Thread(GraphicsRenderThread);
+            renderThread.Start();
 
             AddHook();
 
@@ -249,13 +256,6 @@ namespace StdPaint
         
         private static void GraphicsDrawThread()
         {
-            enabled = true;
-            int w = Console.BufferWidth;
-            int h = Console.BufferHeight;
-            COORD cFrom = new COORD(0, 0);
-            COORD cTo = new COORD((short)w, (short)h);
-            SMALL_RECT rect = new SMALL_RECT(0, 0, (short)w, (short)h);
-            var bb = backBuffer.Buffer;           
             while (enabled)
             {
                 if (Paint != null)
@@ -263,10 +263,31 @@ namespace StdPaint
                     Paint(null, null);
                 }
 
-                Native.WriteConsoleOutput(conHandle, bb, cTo, cFrom, ref rect);
                 Thread.Sleep(refreshInterval);
+            }            
+        }
+
+        private static void GraphicsRenderThread()
+        {
+            int w = Console.BufferWidth;
+            int h = Console.BufferHeight;
+            COORD cFrom = new COORD(0, 0);
+            COORD cTo = new COORD((short)w, (short)h);
+            SMALL_RECT rect = new SMALL_RECT(0, 0, (short)w, (short)h);
+            var bb = backBuffer.Buffer;
+            var fb = frontBuffer.Buffer;
+            int length = backBuffer.UnitCount * BufferUnitInfo.SizeBytes;
+            unsafe
+            {
+                fixed (BufferUnitInfo* bbPtr = bb)
+                fixed (BufferUnitInfo* fbPtr = fb)
+                while (enabled)
+                {
+                    Native.CopyMemory(fbPtr, bbPtr, length);
+                    Native.WriteConsoleOutput(conHandle, bb, cTo, cFrom, ref rect);
+                    Thread.Sleep(refreshInterval);
+                }
             }
-            
         }
 
         private static bool InBounds(int x, int y)

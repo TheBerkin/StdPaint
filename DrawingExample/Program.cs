@@ -87,7 +87,7 @@ namespace DrawingExample
 
             // Draw the canvas
             Painter.ActiveBuffer.DrawBuffer(paintBuffer, 0, 0, BufferDrawMode.DrawOver);
-
+                        
             // Draw the color pallette
             for (int i = 0; i < pallette.Length; i++)
             {
@@ -95,7 +95,7 @@ namespace DrawingExample
             }
 
             // Draw the extension showing the active color
-            Painter.ActiveBuffer.DrawBox(5, pen * 5, 2, 5, pallette[pen]);
+            Painter.ActiveBuffer.DrawBox(5, pen * 5, 2, 5, pallette[pen]);                         
         }
     }
 }
