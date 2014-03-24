@@ -15,6 +15,8 @@ namespace StdPaint
         int _width, _height;
         BufferUnitInfo[,] _buffer;
 
+        public readonly int UnitCount;
+
         /// <summary>
         /// Initializes a new ConsoleBuffer instance with the specified dimensions.
         /// </summary>
@@ -25,6 +27,7 @@ namespace StdPaint
             _width = width;
             _height = height;
             _buffer = new BufferUnitInfo[height, width];
+            UnitCount = _buffer.Length;
         }
 
         private ConsoleBuffer(int width, int height, BufferUnitInfo[,] bufferData)
@@ -32,6 +35,7 @@ namespace StdPaint
             _width = width;
             _height = height;
             _buffer = bufferData;
+            UnitCount = _buffer.Length;
         }
 
         /// <summary>
@@ -59,7 +63,7 @@ namespace StdPaint
                 for(int i = 0; i < width; i++)
                 for(int j = 0; j < height; j++)
                 {
-                    temp.Attributes = (BufferUnitAttributes)reader.ReadInt16();
+                    temp._attrs = reader.ReadInt16();
                     temp.CharData = reader.ReadChar();
                     bufferData[j, i] = temp;
                 }
@@ -80,7 +84,7 @@ namespace StdPaint
                 for(int i = 0; i < _width; i++)
                 for(int j = 0; j < _height; j++)
                 {
-                    writer.Write((short)_buffer[j, i].Attributes);
+                    writer.Write((short)_buffer[j, i]._attrs);
                     writer.Write(_buffer[j, i].CharData);
                 }
             }
@@ -113,13 +117,14 @@ namespace StdPaint
         /// <summary>
         /// Clears all units in the buffer, optionally specifying attributes to fill the buffer with.
         /// </summary>
-        /// <param name="clearAttributes">The attributes to fill the buffer with.</param>
-        public void Clear(BufferUnitAttributes clearAttributes = BufferUnitAttributes.None)
+        /// <param name="color">The color to fill the buffer with.</param>
+        public void Clear(BufferColor color = BufferColor.Black)
         {            
             for (int i = 0; i < _width; i++)
             for (int j = 0; j < _height; j++)
             {
-                _buffer[j, i].Attributes = clearAttributes;
+                _buffer[j, i].BackColor = color;
+                _buffer[j, i].ForeColor = color;
                 _buffer[j, i].CharData = '\0';
             }
         }
@@ -134,7 +139,7 @@ namespace StdPaint
         {
             if (InBounds(x, y))
             {
-                _buffer[y, x].Attributes = attributes;
+                _buffer[y, x]._attrs = (short)attributes;
             }
         }
 
@@ -146,6 +151,110 @@ namespace StdPaint
         public void SetUnitAttributes(Point point, BufferUnitAttributes attributes)
         {
             SetUnitAttributes(point.X, point.Y, attributes);
+        }
+
+        /// <summary>
+        /// Sets the background color for a specific unit in the buffer.
+        /// </summary>
+        /// <param name="point">The location of the unit.</param>
+        /// <param name="color">The background color to set the unit to.</param>
+        public void SetUnitBackColor(Point point, BufferColor color)
+        {
+            _buffer[point.Y, point.X].BackColor = color;
+        }
+
+        /// <summary>
+        /// Sets the background color for a specific unit in the buffer.
+        /// </summary>
+        /// <param name="x">The X coordinate of the unit.</param>
+        /// <param name="y">The Y coordinate of the unit.</param>
+        /// <param name="color">The background color to set the unit to.</param>
+        public void SetUnitBackColor(int x, int y, BufferColor color)
+        {
+            _buffer[y, x].BackColor = color;
+        }
+
+        /// <summary>
+        /// Sets the foreground color for a specific unit in the buffer.
+        /// </summary>
+        /// <param name="point">The location of the unit.</param>
+        /// <param name="color">The foreground color to set the unit to.</param>
+        public void SetUnitForeColor(Point point, BufferColor color)
+        {
+            
+            _buffer[point.Y, point.X].ForeColor = color;
+        }
+
+        /// <summary>
+        /// Sets the foreground color for a specific unit in the buffer.
+        /// </summary>
+        /// <param name="x">The X coordinate of the unit.</param>
+        /// <param name="y">The Y coordinate of the unit.</param>
+        /// <param name="color">The foreground color to set the unit to.</param>
+        public void SetUnitForeColor(int x, int y, BufferColor color)
+        {
+            if (InBounds(x, y))
+            {
+                _buffer[y, x].ForeColor = color;
+            }
+        }
+
+        /// <summary>
+        /// Gets the foreground color of the specified unit.
+        /// </summary>
+        /// <param name="point">The location of the unit.</param>
+        /// <returns></returns>
+        public BufferColor GetUnitForeColor(Point point)
+        {
+            if (InBounds(point))
+            {
+                return _buffer[point.Y, point.X].ForeColor;
+            }
+            return BufferColor.Black;
+        }
+
+        /// <summary>
+        /// Gets the foreground color of the specified unit.
+        /// </summary>
+        /// <param name="x">The X coordinate of the unit.</param>
+        /// <param name="y">The Y coordinate of the unit.</param>
+        /// <returns></returns>
+        public BufferColor GetUnitForeColor(int x, int y)
+        {
+            if (InBounds(x,y))
+            {
+                return _buffer[y, x].ForeColor;
+            }
+            return BufferColor.Black;
+        }
+
+        /// <summary>
+        /// Gets the background color of the specified unit.
+        /// </summary>
+        /// <param name="point">The location of the unit.</param>
+        /// <returns></returns>
+        public BufferColor GetUnitBackColor(Point point)
+        {
+            if (InBounds(point))
+            {
+                return _buffer[point.Y, point.X].BackColor;
+            }
+            return BufferColor.Black;
+        }
+
+        /// <summary>
+        /// Gets the background color of the specified unit.
+        /// </summary>
+        /// <param name="x">The X coordinate of the unit.</param>
+        /// <param name="y">The Y coordinate of the unit.</param>
+        /// <returns></returns>
+        public BufferColor GetUnitBackColor(int x, int y)
+        {
+            if (InBounds(x, y))
+            {
+                return _buffer[y, x].BackColor;
+            }
+            return BufferColor.Black;
         }
 
         /// <summary>
@@ -173,6 +282,35 @@ namespace StdPaint
         }
 
         /// <summary>
+        /// Gets the character in the specified unit.
+        /// </summary>
+        /// <param name="x">The X coordinate of the unit.</param>
+        /// <param name="y">The Y coordinate of the unit.</param>
+        /// <returns></returns>
+        public char GetUnitCharacter(int x, int y)
+        {
+            if(InBounds(x,y))
+            {
+                return _buffer[y, x].CharData;
+            }
+            return '\0';
+        }
+
+        /// <summary>
+        /// Gets the character in the specified unit.
+        /// </summary>
+        /// <param name="point">The location of the unit.</param>
+        /// <returns></returns>
+        public char GetUnitCharacter(Point point)
+        {
+            if (InBounds(point.X, point.Y))
+            {
+                return _buffer[point.Y, point.X].CharData;
+            }
+            return '\0';
+        }
+
+        /// <summary>
         /// Returns the attributes for the specified unit.
         /// </summary>
         /// <param name="x">The X coordinate of the unit.</param>
@@ -183,7 +321,7 @@ namespace StdPaint
             var attrs = BufferUnitAttributes.None;
             if (InBounds(x,y))
             {
-                attrs = _buffer[y, x].Attributes;
+                attrs = (BufferUnitAttributes)_buffer[y, x]._attrs;
             }
             return attrs;
         }
@@ -195,8 +333,8 @@ namespace StdPaint
         /// <param name="y">The Y coordinate of the box.</param>
         /// <param name="w">The width of the box.</param>
         /// <param name="h">The height of the box.</param>
-        /// <param name="attributes">The attributes to draw the box with.</param>
-        public void DrawBox(int x, int y, int w, int h, BufferUnitAttributes attributes)
+        /// <param name="color">The color to draw the box with.</param>
+        public void DrawBox(int x, int y, int w, int h, BufferColor color)
         {
             if (w < 0)
             {
@@ -216,7 +354,7 @@ namespace StdPaint
                 {
                     if (InBounds(x + i, y + j))
                     {
-                        b[y + j, x + i].Attributes = attributes;
+                        b[y + j, x + i].BackColor = color;
                     }
                 }
         }
@@ -227,8 +365,8 @@ namespace StdPaint
         /// <param name="x">The X position of the circle, relative to its center.</param>
         /// <param name="y">The Y position of the circle, relative to its center.</param>
         /// <param name="radius">The radius of the circle.</param>
-        /// <param name="attributes">The attributes to draw the circle with.</param>
-        public void DrawCircle(int x, int y, int radius, BufferUnitAttributes attributes)
+        /// <param name="color">The color to draw the circle with.</param>
+        public void DrawCircle(int x, int y, int radius, BufferColor color)
         {
             if (radius < 0) radius *= -1;
             int rr = radius * radius;
@@ -237,7 +375,7 @@ namespace StdPaint
             {
                 if (i * i + j * j <= rr && InBounds(x + i, y + j))
                 {
-                    _buffer[y + j, x + i].Attributes = attributes;
+                    _buffer[y + j, x + i].BackColor = color;
                 }                
             }
         }
@@ -249,9 +387,9 @@ namespace StdPaint
         /// <param name="y">The Y position of the circle, relative to its center.</param>
         /// <param name="radius">The radius of the circle.</param>
         /// <param name="thickness">The border thickness of the circle.</param>
-        /// <param name="border">The border attributes for the circle.</param>
-        /// <param name="fill">The fill attributes for the circle.</param>
-        public void DrawCircle(int x, int y, int radius, int thickness, BufferUnitAttributes border, BufferUnitAttributes fill)
+        /// <param name="border">The border color for the circle.</param>
+        /// <param name="fill">The fill color for the circle.</param>
+        public void DrawCircle(int x, int y, int radius, int thickness, BufferColor border, BufferColor fill)
         {
             if (radius < 0) radius *= -1;
             if (thickness < 0) thickness *= -1;
@@ -267,11 +405,11 @@ namespace StdPaint
                 {
                     if(d <= rrb)
                     {
-                        _buffer[y + j, x + i].Attributes = fill;
+                        _buffer[y + j, x + i].BackColor = fill;
                     }
                     else if (d <= rra)
                     {
-                        _buffer[y + j, x + i].Attributes = border;
+                        _buffer[y + j, x + i].BackColor = border;
                     }
                 }
             }
@@ -283,9 +421,9 @@ namespace StdPaint
         /// <param name="x">The X coordinate to start printing at.</param>
         /// <param name="y">The Y coordinate to start printing at.</param>
         /// <param name="text">The string to print.</param>
-        /// <param name="attributes">The attributes to assign to the string.</param>
+        /// <param name="color">The color to assign to the text.</param>
         /// <param name="alignment">The alignment of the string.</param>
-        public void DrawString(int x, int y, string text, BufferUnitAttributes attributes, TextAlignment alignment = TextAlignment.Left)
+        public void DrawString(int x, int y, string text, BufferColor color, TextAlignment alignment = TextAlignment.Left)
         {
             var b = _buffer;
             string[] lines = text.Split(new[] { '\n' });
@@ -300,14 +438,14 @@ namespace StdPaint
                             if (InBounds(x + j, y + i))
                             {
                                 b[y + i, x + j].CharData = lines[i][j];
-                                b[y + i, x + j].Attributes = attributes;
+                                b[y + i, x + j].ForeColor = color;
                             }
                             break;
                         case TextAlignment.Right:
                             if (InBounds(x - len + j, y + i))
                             {
                                 b[y + i, x - len + j].CharData = lines[i][j];
-                                b[y + i, x - len + j].Attributes = attributes;
+                                b[y + i, x - len + j].ForeColor = color;
                             }
                             break;
                     }
@@ -324,19 +462,19 @@ namespace StdPaint
         /// <param name="args">An array of strings and attributes to print.</param>
         public void DrawString(int x, int y, TextAlignment alignment, params object[] args)
         {
-            BufferUnitAttributes attributes = BufferUnitAttributes.ForegroundIntensity;
+            var color = BufferColor.Gray;            
             foreach (var arg in args)
             {
-                if (arg is BufferUnitAttributes)
+                if (arg is BufferColor)
                 {
-                    attributes = (BufferUnitAttributes)arg;
+                    color = (BufferColor)arg;
                 }
                 else
                 {
                     string[] lines = arg.ToString().Split(new[] { '\n' });
                     foreach (string line in lines)
                     {
-                        DrawString(x, lines.Length > 1 ? y++ : y, line, attributes, alignment);
+                        DrawString(x, lines.Length > 1 ? y++ : y, line, color, alignment);
                     }
                 }
             }
@@ -350,7 +488,7 @@ namespace StdPaint
         /// <param name="x2">The ending X coordinate of the line.</param>
         /// <param name="y2">The ending Y coordinate of the line.</param>
         /// <param name="color">The color of the line.</param>
-        public void DrawLine(int x, int y, int x2, int y2, BufferUnitAttributes color)
+        public void DrawLine(int x, int y, int x2, int y2, BufferColor color)
         {
             var b = _buffer;
             int w = x2 - x;
@@ -371,7 +509,7 @@ namespace StdPaint
             int numerator = longest >> 1;
             for (int i = 0; i <= longest; i++)
             {
-                b[y, x].Attributes = color;
+                b[y, x].BackColor = color;
                 numerator += shortest;
                 if (!(numerator < longest))
                 {
@@ -398,37 +536,57 @@ namespace StdPaint
         {
             var b = _buffer;
             var b2 = buffer.Buffer;
-            var w = buffer.Width;
-            var h = buffer.Height;
-            for (int i = 0; i < w; i++)
-                for (int j = 0; j < h; j++)
+
+            if ((x | y) == 0 && buffer.UnitCount == this.UnitCount) // Just a small optimization :)
+            {
+                unsafe
                 {
-                    if (InBounds(x + i, y + j))
+                    fixed (BufferUnitInfo* dest = _buffer)
+                    fixed (BufferUnitInfo* src = buffer._buffer)
                     {
-                        switch(drawMode)
-                        {
-                            case BufferDrawMode.Additive:
-                                b[j + y, i + x].Attributes |= b2[j, i].Attributes;
-                                break;
-                            case BufferDrawMode.DrawOver:
-                                b[j + y, i + x].Attributes = b2[j, i].Attributes;
-                                break;
-                            case BufferDrawMode.IgnoreBlack:
-                                if (b2[j,i].Attributes != BufferUnitAttributes.None)
-                                {
-                                    b[j + y, i + x].Attributes = b2[j, i].Attributes;
-                                }
-                                break;
-                        }
-                        
-                        b[j + y, i + x].CharData = b2[j, i].CharData;
+                        Native.CopyMemory(dest, src, BufferUnitInfo.SizeBytes * this.UnitCount);
                     }
                 }
+            }
+            else
+            {
+                var w = buffer.Width;
+                var h = buffer.Height;
+                for (int i = 0; i < w; i++)
+                    for (int j = 0; j < h; j++)
+                    {
+                        if (InBounds(x + i, y + j))
+                        {
+                            switch (drawMode)
+                            {
+                                case BufferDrawMode.Additive:
+                                    b[j + y, i + x]._attrs |= b2[j, i]._attrs;
+                                    break;
+                                case BufferDrawMode.DrawOver:
+                                    b[j + y, i + x]._attrs = b2[j, i]._attrs;
+                                    break;
+                                case BufferDrawMode.IgnoreBlack:
+                                    if (b2[j, i].BackColor != BufferColor.Black)
+                                    {
+                                        b[j + y, i + x]._attrs = b2[j, i]._attrs;
+                                    }
+                                    break;
+                            }
+
+                            b[j + y, i + x].CharData = b2[j, i].CharData;
+                        }
+                    }
+            }
         }
 
         private bool InBounds(int x, int y)
         {
             return x >= 0 && x < _width && y >= 0 && y < _height;
+        }
+
+        private bool InBounds(Point point)
+        {
+            return point.X >= 0 && point.X < _width && point.Y >= 0 && point.Y < _height;
         }
     }
 }

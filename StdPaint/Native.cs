@@ -46,6 +46,9 @@ namespace StdPaint
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool SetConsoleCtrlHandler(ConsoleEventCallback callback, bool add);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static unsafe extern bool CopyMemory(void* dest, void* src, int size);
     }
 
     internal delegate IntPtr WndProcCallback(int nCode, IntPtr wParam, IntPtr lParam);

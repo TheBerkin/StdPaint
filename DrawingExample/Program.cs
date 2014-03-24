@@ -35,21 +35,14 @@ namespace DrawingExample
 
         static Point pLast = new Point(-1, -1);
 
-
-        const BufferUnitAttributes white =
-            BufferUnitAttributes.BackgroundRed |
-            BufferUnitAttributes.BackgroundGreen |
-            BufferUnitAttributes.BackgroundBlue |
-            BufferUnitAttributes.BackgroundIntensity;
-
-        static readonly BufferUnitAttributes[] rgbw = {
-                                                  BufferUnitAttributes.BackgroundBlue | BufferUnitAttributes.BackgroundIntensity,
-                                                  BufferUnitAttributes.BackgroundGreen | BufferUnitAttributes.BackgroundIntensity,
-                                                  BufferUnitAttributes.BackgroundRed | BufferUnitAttributes.BackgroundIntensity,
-                                                  BufferUnitAttributes.BackgroundRed |
-                                                  BufferUnitAttributes.BackgroundBlue |
-                                                  BufferUnitAttributes.BackgroundIntensity,
-                                                  white
+        static readonly BufferColor[] pallette = {
+                                                  BufferColor.Blue,
+                                                  BufferColor.Green,
+                                                  BufferColor.Red,
+                                                  BufferColor.Magenta,
+                                                  BufferColor.Cyan,
+                                                  BufferColor.Yellow,
+                                                  BufferColor.White
                                               };
 
         static int pen = 3;
@@ -65,20 +58,20 @@ namespace DrawingExample
         {
             pLast = e.UnitLocation;
 
-            if (!penOn && e.UnitLocation.X < 5 && e.UnitLocation.Y < rgbw.Length * 5)
+            if (!penOn && e.UnitLocation.X < 5 && e.UnitLocation.Y < pallette.Length * 5)
             {
                 pen = e.UnitLocation.Y / 5;
             }
 
             penOn = true;
-            paintBuffer.SetUnitAttributes(e.UnitLocation.X, e.UnitLocation.Y, rgbw[pen]);
+            paintBuffer.SetUnitBackColor(e.UnitLocation.X, e.UnitLocation.Y, pallette[pen]);
         }
 
         static void Painter_MouseMove(object sender, PainterMouseEventArgs e)
         {
             if (penOn)
             {
-                paintBuffer.DrawLine(pLast.X, pLast.Y, e.UnitLocation.X, e.UnitLocation.Y, rgbw[pen]);
+                paintBuffer.DrawLine(pLast.X, pLast.Y, e.UnitLocation.X, e.UnitLocation.Y, pallette[pen]);
             }
             pLast = e.UnitLocation;
         }
@@ -96,13 +89,13 @@ namespace DrawingExample
             Painter.ActiveBuffer.DrawBuffer(paintBuffer, 0, 0, BufferDrawMode.DrawOver);
 
             // Draw the color pallette
-            for (int i = 0; i < rgbw.Length; i++)
+            for (int i = 0; i < pallette.Length; i++)
             {
-                Painter.ActiveBuffer.DrawBox(0, i * 5, 5, 5, rgbw[i]);
+                Painter.ActiveBuffer.DrawBox(0, i * 5, 5, 5, pallette[i]);
             }
 
             // Draw the extension showing the active color
-            Painter.ActiveBuffer.DrawBox(5, pen * 5, 2, 5, rgbw[pen]);
+            Painter.ActiveBuffer.DrawBox(5, pen * 5, 2, 5, pallette[pen]);
         }
     }
 }

@@ -9,14 +9,14 @@ namespace SpiralExample
 {
     class Program
     {
-        static BufferUnitAttributes[] colors = {
-                                                   BufferUnitAttributes.BackgroundBlue | BufferUnitAttributes.BackgroundIntensity,
-                                                   BufferUnitAttributes.BackgroundGreen | BufferUnitAttributes.BackgroundIntensity,
-                                                   BufferUnitAttributes.BackgroundRed | BufferUnitAttributes.BackgroundIntensity,
-                                                   BufferUnitAttributes.BackgroundBlue | BufferUnitAttributes.BackgroundRed | BufferUnitAttributes.BackgroundIntensity,
-                                                   BufferUnitAttributes.BackgroundGreen | BufferUnitAttributes.BackgroundBlue | BufferUnitAttributes.BackgroundIntensity,
-                                                   BufferUnitAttributes.BackgroundRed | BufferUnitAttributes.BackgroundGreen | BufferUnitAttributes.BackgroundIntensity
-                                               };
+        static BufferColor[] colors =   {
+                                            BufferColor.Blue,
+                                            BufferColor.Green,
+                                            BufferColor.Red,
+                                            BufferColor.Magenta,
+                                            BufferColor.Cyan,
+                                            BufferColor.Yellow
+                                        };
 
         static long ticks = 0;
 
@@ -84,7 +84,7 @@ namespace SpiralExample
                 {
                     o += SpiralStripeOffset(center, p, d);
                 }
-                b[j, i].Attributes = colors[o % colors.Length];
+                b[j, i].BackColor = colors[o % colors.Length];
             }
 
             ticks++;

@@ -13,13 +13,44 @@ namespace StdPaint
     [StructLayout(LayoutKind.Sequential)]
     public struct BufferUnitInfo // CHAR_INFO
     {
+        internal static readonly int SizeBytes = Marshal.SizeOf(typeof(BufferUnitInfo));
+
         /// <summary>
         /// The character displayed in the buffer unit.
         /// </summary>
         public char CharData;
+        
+
+        internal short _attrs;
+
+        public BufferUnitAttributes Attributes
+        {
+            get { return (BufferUnitAttributes)_attrs; }
+            set { _attrs = (short)value; }
+        }
+
         /// <summary>
-        /// The color attributes for the buffer unit.
+        /// Gets the foreground color.
         /// </summary>
-        public BufferUnitAttributes Attributes;
+        public BufferColor ForeColor
+        {
+            get { return (BufferColor)(_attrs >> 4); }
+            set
+            {
+                _attrs = (short)((_attrs & 0xF0) | (int)value);
+            }
+        }
+
+        /// <summary>
+        /// Gets the background color.
+        /// </summary>
+        public BufferColor BackColor
+        {
+            get { return (BufferColor)(_attrs & 4); }
+            set
+            {
+                _attrs = (short)((_attrs & 0x0F) | ((int)value << 4));
+            }
+        }
     }
 }

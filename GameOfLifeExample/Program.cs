@@ -104,14 +104,14 @@ namespace GameOfLifeExample
         static void Painter_LeftButtonDown(object sender, PainterMouseEventArgs e)
         {
             penOn = true;
-            Painter.ActiveBuffer.SetUnitAttributes(e.UnitLocation, white);
+            Painter.ActiveBuffer.Buffer[e.UnitLocation.Y, e.UnitLocation.X].BackColor = BufferColor.White;
         }
 
         static void Painter_MouseMove(object sender, PainterMouseEventArgs e)
         {
             if (penOn)
             {
-                Painter.ActiveBuffer.DrawLine(prevPos.X, prevPos.Y, e.UnitLocation.X, e.UnitLocation.Y, white);
+                Painter.ActiveBuffer.DrawLine(prevPos.X, prevPos.Y, e.UnitLocation.X, e.UnitLocation.Y, BufferColor.White);
             }
             prevPos = e.UnitLocation;
         }

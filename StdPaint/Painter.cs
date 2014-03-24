@@ -15,7 +15,7 @@ namespace StdPaint
     /// </summary>
     public static class Painter
     {
-        static Thread drawThread, displayThread;
+        static Thread drawThread;
         static IntPtr conHandle = Native.GetStdHandle(-11);
         static bool enabled;
 
@@ -24,7 +24,7 @@ namespace StdPaint
         static WndProcCallback _proc = HookCallback;
         static RECT clientRect;
 
-        static ConsoleBuffer backBuffer, activeBuffer, frontBuffer = null;
+        static ConsoleBuffer backBuffer, activeBuffer = null;
 
         static int refreshInterval = 3;
 
@@ -124,7 +124,6 @@ namespace StdPaint
             Console.SetBufferSize(width, height);
 
             backBuffer = activeBuffer = ConsoleBuffer.CreateScreenBuffer();
-            frontBuffer = ConsoleBuffer.CreateScreenBuffer();
 
             refreshInterval = bufferRefreshRate;
 
@@ -136,10 +135,6 @@ namespace StdPaint
             drawThread = null;
             drawThread = new Thread(GraphicsDrawThread);
             drawThread.Start();
-
-            displayThread = null;
-            displayThread = new Thread(GraphicsDisplayThread);
-            displayThread.Start();
 
             AddHook();
 
@@ -246,41 +241,32 @@ namespace StdPaint
         /// <summary>
         /// Clears the active buffer to the specified attributes.
         /// </summary>
-        /// <param name="clearAttributes">The attributes to fill the buffer with.</param>
-        public static void Clear(BufferUnitAttributes clearAttributes = BufferUnitAttributes.None)
+        /// <param name="clearColor">The attributes to fill the buffer with.</param>
+        public static void Clear(BufferColor clearColor = BufferColor.Black)
         {
-            ActiveBuffer.Clear(clearAttributes);
+            ActiveBuffer.Clear(clearColor);
         }
         
-        private static void GraphicsDisplayThread()
+        private static void GraphicsDrawThread()
         {
+            enabled = true;
             int w = Console.BufferWidth;
             int h = Console.BufferHeight;
             COORD cFrom = new COORD(0, 0);
             COORD cTo = new COORD((short)w, (short)h);
             SMALL_RECT rect = new SMALL_RECT(0, 0, (short)w, (short)h);
-
-            while(enabled)
+            var bb = backBuffer.Buffer;           
+            while (enabled)
             {
-                Native.WriteConsoleOutput(conHandle, frontBuffer.Buffer, cTo, cFrom, ref rect);
-                Thread.Sleep(1);
-            }
-        }
-
-        private static void GraphicsDrawThread()
-        {
-            enabled = true;
-
-            while(enabled)
-            {     
                 if (Paint != null)
                 {
                     Paint(null, null);
                 }
 
-                Array.Copy(backBuffer.Buffer, frontBuffer.Buffer, backBuffer.Buffer.Length);
+                Native.WriteConsoleOutput(conHandle, bb, cTo, cFrom, ref rect);
                 Thread.Sleep(refreshInterval);
             }
+            
         }
 
         private static bool InBounds(int x, int y)
