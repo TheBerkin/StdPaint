@@ -118,14 +118,78 @@ namespace StdPaint
         /// Clears all units in the buffer, optionally specifying attributes to fill the buffer with.
         /// </summary>
         /// <param name="color">The color to fill the buffer with.</param>
-        public void Clear(BufferColor color = BufferColor.Black)
-        {            
-            for (int i = 0; i < _width; i++)
-            for (int j = 0; j < _height; j++)
+        public unsafe void Clear(BufferColor color = BufferColor.Black)
+        {
+            fixed (BufferUnitInfo* b = _buffer)
             {
-                _buffer[j, i].BackColor = color;
-                _buffer[j, i].ForeColor = color;
-                _buffer[j, i].CharData = '\0';
+                for (int i = UnitCount; i >= 0; i--)
+                {                    
+                    b[i].BackColor = color;
+                    b[i].ForeColor = color;
+                    b[i].CharData = '\0';
+                }
+            }
+        }
+
+        /// <summary>
+        /// Fills a closed region containing the specified coordinates with a color.
+        /// </summary>
+        /// <param name="x">The X coordinate to begin filling at.</param>
+        /// <param name="y">The Y coordinate to begin filling at.</param>
+        /// <param name="color">The color to fill the region with.</param>
+        public unsafe void Fill(int x, int y, BufferColor color)
+        {
+            if (!InBounds(x, y)) return;
+            var initColor = _buffer[y, x].BackColor;
+            if (color == initColor) return;
+            List<Point> queue = new List<Point>(32);
+            queue.Add(new Point(x, y));
+            Point p;
+            int w, e, j;
+            for (int i = 0; i < queue.Count; i++)
+            {
+                p = queue[i];
+                w = e = p.X;
+                while(w - 1 >= 0)
+                {
+                    if (_buffer[p.Y, w - 1].BackColor == initColor)
+                    {
+                        w--;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                while (e + 1 < _width)
+                {
+                    if (_buffer[p.Y, e + 1].BackColor == initColor)
+                    {
+                        e++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                for (j = w; j <= e; j++)
+                {
+                    _buffer[p.Y, j].BackColor = color;
+                    if (p.Y + 1 < _height)
+                    {
+                        if (_buffer[p.Y + 1, j].BackColor == initColor)
+                        {
+                            queue.Add(new Point(j, p.Y + 1));
+                        }
+                    }
+                    if (p.Y - 1 >= 0)
+                    {
+                        if (_buffer[p.Y - 1, j].BackColor == initColor)
+                        {
+                            queue.Add(new Point(j, p.Y - 1));
+                        }
+                    }                    
+                }                
             }
         }
 

@@ -30,7 +30,7 @@ namespace DrawingExample
 
         static void Painter_RightButtonDown(object sender, PainterMouseEventArgs e)
         {
-            paintBuffer.Clear();
+            paintBuffer.Fill(e.UnitLocation.X, e.UnitLocation.Y, pallette[pen]);
         }
 
         static Point pLast = new Point(-1, -1);

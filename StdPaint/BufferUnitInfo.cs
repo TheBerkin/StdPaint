@@ -34,7 +34,7 @@ namespace StdPaint
         /// </summary>
         public BufferColor ForeColor
         {
-            get { return (BufferColor)(_attrs >> 4); }
+            get { return (BufferColor)(_attrs & 0x0F); }
             set
             {
                 _attrs = (short)((_attrs & 0xF0) | (int)value);
@@ -46,7 +46,7 @@ namespace StdPaint
         /// </summary>
         public BufferColor BackColor
         {
-            get { return (BufferColor)(_attrs & 4); }
+            get { return (BufferColor)(_attrs >> 4); }
             set
             {
                 _attrs = (short)((_attrs & 0x0F) | ((int)value << 4));
