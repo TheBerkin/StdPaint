@@ -132,12 +132,12 @@ namespace StdPaint
         }
 
         /// <summary>
-        /// Fills a closed region containing the specified coordinates with a color.
+        /// Flood fills a closed region containing the specified coordinates with a color.
         /// </summary>
         /// <param name="x">The X coordinate to begin filling at.</param>
         /// <param name="y">The Y coordinate to begin filling at.</param>
         /// <param name="color">The color to fill the region with.</param>
-        public unsafe void Fill(int x, int y, BufferColor color)
+        public unsafe void FloodFill(int x, int y, BufferColor color)
         {
             if (!InBounds(x, y)) return;
             var initColor = _buffer[y, x].BackColor;
