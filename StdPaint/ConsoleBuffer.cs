@@ -222,6 +222,62 @@ namespace StdPaint
         }
 
         /// <summary>
+        /// Draws a solid circle to the buffer with the specified attributes.
+        /// </summary>
+        /// <param name="x">The X position of the circle, relative to its center.</param>
+        /// <param name="y">The Y position of the circle, relative to its center.</param>
+        /// <param name="radius">The radius of the circle.</param>
+        /// <param name="attributes">The attributes to draw the circle with.</param>
+        public void DrawCircle(int x, int y, int radius, BufferUnitAttributes attributes)
+        {
+            if (radius < 0) radius *= -1;
+            int rr = radius * radius;
+            for(int i = -radius; i <= radius; i++)
+            for (int j = -radius; j <= radius; j++)
+            {
+                if (i * i + j * j <= rr && InBounds(x + i, y + j))
+                {
+                    _buffer[y + j, x + i].Attributes = attributes;
+                }                
+            }
+        }
+
+        /// <summary>
+        /// Draws a circle with the specified radius, border thickness, and attributes for both border and fill.
+        /// </summary>
+        /// <param name="x">The X position of the circle, relative to its center.</param>
+        /// <param name="y">The Y position of the circle, relative to its center.</param>
+        /// <param name="radius">The radius of the circle.</param>
+        /// <param name="thickness">The border thickness of the circle.</param>
+        /// <param name="border">The border attributes for the circle.</param>
+        /// <param name="fill">The fill attributes for the circle.</param>
+        public void DrawCircle(int x, int y, int radius, int thickness, BufferUnitAttributes border, BufferUnitAttributes fill)
+        {
+            if (radius < 0) radius *= -1;
+            if (thickness < 0) thickness *= -1;
+            if (thickness > radius) thickness = radius;
+            int rra = radius * radius;
+            int rrb = rra - thickness * thickness;
+            int d = 0;
+            for(int i = -radius; i <= radius; i++)
+            for (int j = -radius; j <= radius; j++)
+            {
+                d = i * i + j * j;
+                if (InBounds(x + i, y + j))
+                {
+                    if(d <= rrb)
+                    {
+                        _buffer[y + j, x + i].Attributes = fill;
+                    }
+                    else if (d <= rra)
+                    {
+                        _buffer[y + j, x + i].Attributes = border;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Prints a string to the buffer with the specified attributes and alignment.
         /// </summary>
         /// <param name="x">The X coordinate to start printing at.</param>
