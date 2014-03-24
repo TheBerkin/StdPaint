@@ -16,6 +16,9 @@ namespace StdPaint
         int _width, _height;
         BufferUnitInfo[,] _buffer;
 
+        /// <summary>
+        /// The total number of units in this buffer.
+        /// </summary>
         public readonly int UnitCount;
 
         /// <summary>
@@ -116,7 +119,7 @@ namespace StdPaint
         }
 
         /// <summary>
-        /// Clears all units in the buffer, optionally specifying attributes to fill the buffer with.
+        /// Clears all units in the buffer, optionally specifying a color to fill the buffer with.
         /// </summary>
         /// <param name="color">The color to fill the buffer with.</param>
         public unsafe void Clear(BufferColor color = BufferColor.Black)
@@ -129,6 +132,21 @@ namespace StdPaint
                     b[i].ForeColor = color;
                     b[i].CharData = '\0';
                 }
+            }
+        }
+
+        /// <summary>
+        /// Fills the entire buffer with a brush.
+        /// </summary>
+        /// <param name="color">The color to fill the buffer with.</param>
+        public unsafe void ClearBrush(BufferBrush brush)
+        {
+            for (int i = _width - 1; i >= 0; i--)
+            for (int j = _height - 1; j >= 0; j--)
+            {
+                _buffer[j, i].ForeColor = brush.GetColor(i, j);
+                _buffer[j, i].BackColor = brush.GetColor(i, j);
+                _buffer[j, i].CharData = '\0';
             }
         }
 
@@ -487,6 +505,39 @@ namespace StdPaint
         }
 
         /// <summary>
+        /// Draws a solid box with the specified dimensions to the buffer.
+        /// </summary>
+        /// <param name="x">the X coordinate of the box.</param>
+        /// <param name="y">The Y coordinate of the box.</param>
+        /// <param name="w">The width of the box.</param>
+        /// <param name="h">The height of the box.</param>
+        /// <param name="brush">The brush to draw the box with.</param>
+        public void DrawBox(int x, int y, int w, int h, BufferBrush brush)
+        {
+            if (w < 0)
+            {
+                w *= -1;
+                x -= w;
+            }
+            if (h < 0)
+            {
+                h *= -1;
+                y -= h;
+            }
+
+            var b = _buffer;
+
+            for (int i = 0; i < w; i++)
+                for (int j = 0; j < h; j++)
+                {
+                    if (InBounds(x + i, y + j))
+                    {
+                        b[y + j, x + i].BackColor = brush.GetColor(x + i, y + j);
+                    }
+                }
+        }
+
+        /// <summary>
         /// Draws a solid circle to the buffer with the specified attributes.
         /// </summary>
         /// <param name="x">The X position of the circle, relative to its center.</param>
@@ -505,6 +556,27 @@ namespace StdPaint
                     _buffer[y + j, x + i].BackColor = color;
                 }                
             }
+        }
+
+        /// <summary>
+        /// Draws a solid circle to the buffer with the specified attributes.
+        /// </summary>
+        /// <param name="x">The X position of the circle, relative to its center.</param>
+        /// <param name="y">The Y position of the circle, relative to its center.</param>
+        /// <param name="radius">The radius of the circle.</param>
+        /// <param name="brush">The brush to draw the circle with.</param>
+        public void DrawCircle(int x, int y, int radius, BufferBrush brush)
+        {
+            if (radius < 0) radius *= -1;
+            int rr = radius * radius;
+            for (int i = -radius; i <= radius; i++)
+                for (int j = -radius; j <= radius; j++)
+                {
+                    if (i * i + j * j <= rr && InBounds(x + i, y + j))
+                    {
+                        _buffer[y + j, x + i].BackColor = brush.GetColor(x + i,y + j);
+                    }
+                }
         }
 
         /// <summary>
@@ -540,6 +612,41 @@ namespace StdPaint
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Draws a circle with the specified radius, border thickness, and attributes for both border and fill.
+        /// </summary>
+        /// <param name="x">The X position of the circle, relative to its center.</param>
+        /// <param name="y">The Y position of the circle, relative to its center.</param>
+        /// <param name="radius">The radius of the circle.</param>
+        /// <param name="thickness">The border thickness of the circle.</param>
+        /// <param name="border">The border brush for the circle.</param>
+        /// <param name="fill">The fill brush for the circle.</param>
+        public void DrawCircle(int x, int y, int radius, int thickness, BufferBrush border, BufferBrush fill)
+        {
+            if (radius < 0) radius *= -1;
+            if (thickness < 0) thickness *= -1;
+            if (thickness > radius) thickness = radius;
+            int rra = radius * radius;
+            int rrb = (radius - thickness) * (radius - thickness);
+            int d = 0;
+            for (int i = -radius; i <= radius; i++)
+                for (int j = -radius; j <= radius; j++)
+                {
+                    d = i * i + j * j;
+                    if (InBounds(x + i, y + j))
+                    {
+                        if (d < rrb)
+                        {
+                            _buffer[y + j, x + i].BackColor = fill.GetColor(x + i, y + j);
+                        }
+                        else if (d <= rra)
+                        {
+                            _buffer[y + j, x + i].BackColor = border.GetColor(x + i, y + j);
+                        }
+                    }
+                }
         }
 
         /// <summary>
@@ -637,6 +744,51 @@ namespace StdPaint
             for (int i = 0; i <= longest; i++)
             {
                 b[y, x].BackColor = color;
+                numerator += shortest;
+                if (!(numerator < longest))
+                {
+                    numerator -= longest;
+                    x += dx1;
+                    y += dy1;
+                }
+                else
+                {
+                    x += dx2;
+                    y += dy2;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Draws a line to the buffer.
+        /// </summary>
+        /// <param name="x">The starting X coordinate of the line.</param>
+        /// <param name="y">The starting Y coordinate of the line.</param>
+        /// <param name="x2">The ending X coordinate of the line.</param>
+        /// <param name="y2">The ending Y coordinate of the line.</param>
+        /// <param name="brush">The brush to draw the line with.</param>
+        public void DrawLine(int x, int y, int x2, int y2, BufferBrush brush)
+        {
+            var b = _buffer;
+            int w = x2 - x;
+            int h = y2 - y;
+            int dx1 = 0, dy1 = 0, dx2 = 0, dy2 = 0;
+            if (w < 0) dx1 = -1; else if (w > 0) dx1 = 1;
+            if (h < 0) dy1 = -1; else if (h > 0) dy1 = 1;
+            if (w < 0) dx2 = -1; else if (w > 0) dx2 = 1;
+            int longest = Math.Abs(w);
+            int shortest = Math.Abs(h);
+            if (!(longest > shortest))
+            {
+                longest = Math.Abs(h);
+                shortest = Math.Abs(w);
+                if (h < 0) dy2 = -1; else if (h > 0) dy2 = 1;
+                dx2 = 0;
+            }
+            int numerator = longest >> 1;
+            for (int i = 0; i <= longest; i++)
+            {
+                b[y, x].BackColor = brush.GetColor(x,y);
                 numerator += shortest;
                 if (!(numerator < longest))
                 {
