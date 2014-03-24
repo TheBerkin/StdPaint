@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace StdPaint
 {
@@ -26,6 +27,13 @@ namespace StdPaint
             _buffer = new BufferUnitInfo[height, width];
         }
 
+        private ConsoleBuffer(int width, int height, BufferUnitInfo[,] bufferData)
+        {
+            _width = width;
+            _height = height;
+            _buffer = bufferData;
+        }
+
         /// <summary>
         /// Creates a buffer whose size matches the current unit dimensions of the console.
         /// </summary>
@@ -33,6 +41,49 @@ namespace StdPaint
         public static ConsoleBuffer CreateScreenBuffer()
         {
             return new ConsoleBuffer(Console.BufferWidth, Console.BufferHeight);
+        }
+
+        /// <summary>
+        /// Loads buffer data from a file and returns it as a ConsoleBuffer object.
+        /// </summary>
+        /// <param name="path">The path to the buffer file.</param>
+        /// <returns></returns>
+        public static ConsoleBuffer FromFile(string path)
+        {
+            using(BinaryReader reader = new BinaryReader(File.Open(path, FileMode.Open)))
+            {
+                int width = reader.ReadInt32();
+                int height = reader.ReadInt32();
+                BufferUnitInfo[,] bufferData = new BufferUnitInfo[height, width];
+                BufferUnitInfo temp = new BufferUnitInfo();
+                for(int i = 0; i < width; i++)
+                for(int j = 0; j < height; j++)
+                {
+                    temp.Attributes = (BufferUnitAttributes)reader.ReadInt16();
+                    temp.CharData = reader.ReadChar();
+                    bufferData[j, i] = temp;
+                }
+                return new ConsoleBuffer(width, height, bufferData);
+            }
+        }
+
+        /// <summary>
+        /// Writes the buffer data to a file.
+        /// </summary>
+        /// <param name="path">The path to the file.</param>
+        public void Save(string path)
+        {
+            using(BinaryWriter writer = new BinaryWriter(File.Create(path)))
+            {
+                writer.Write(_width);
+                writer.Write(_height);
+                for(int i = 0; i < _width; i++)
+                for(int j = 0; j < _height; j++)
+                {
+                    writer.Write((short)_buffer[j, i].Attributes);
+                    writer.Write(_buffer[j, i].CharData);
+                }
+            }
         }
 
         /// <summary>
