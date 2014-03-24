@@ -612,41 +612,53 @@ namespace StdPaint
                     }
                 }
             }
-            else
+            else                
             {
-                var w = buffer._width;
+                int offx = 0;
+                int offy = 0;
+                int w = buffer._width;
+                int h = buffer._height;
+                if (x + w < 0 || y + h == 0 || y >= _height || x >= _width)
+                {
+                    return;
+                }
                 if (w + x > _width)
                 {
                     w -= w + x - _width;
                 }
                 if (x < 0)
                 {
-
+                    offx = -x;
                 }
-                var h = buffer._height;
-                for (int i = w; i >= 0; i--)
-                for (int j = h; j >= 0; j--)
+                if (h + y > _height)
                 {
-                    if (InBounds(x + i, y + j))
+                    h -= h + y - _height;
+                }
+                if (y < 0)
+                {
+                    offy = -y;
+                }
+                
+                for (int i = w; i >= offx; i--)
+                for (int j = h; j >= offy; j--)
+                {
+                    switch (drawMode)
                     {
-                        switch (drawMode)
-                        {
-                            case BufferDrawMode.Additive:
-                                b[j + y, i + x]._attrs |= b2[j, i]._attrs;
-                                break;
-                            case BufferDrawMode.DrawOver:
-                                b[j + y, i + x]._attrs = b2[j, i]._attrs;
-                                break;
-                            case BufferDrawMode.IgnoreBlack:
-                                if (b2[j, i].BackColor != BufferColor.Black)
-                                {
-                                    b[j + y, i + x]._attrs = b2[j, i]._attrs;
-                                }
-                                break;
-                        }
-
-                        b[j + y, i + x].CharData = b2[j, i].CharData;
+                        case BufferDrawMode.Additive:
+                            b[j + y + offy, i + x + offx]._attrs |= b2[j, i]._attrs;
+                            break;
+                        case BufferDrawMode.DrawOver:
+                            b[j + y + offy, i + x + offx]._attrs = b2[j, i]._attrs;
+                            break;
+                        case BufferDrawMode.IgnoreBlack:
+                            if (b2[j, i].BackColor != BufferColor.Black)
+                            {
+                                b[j + y + offy, i + x + offx]._attrs = b2[j, i]._attrs;
+                            }
+                            break;
                     }
+
+                    b[j + y + offy, i + x + offx].CharData = b2[j, i].CharData;
                 }
             }
         }
