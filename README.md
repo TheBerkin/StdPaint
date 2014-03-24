@@ -13,3 +13,4 @@ Features
 * Mouse event handling with buffer coordinates
 * Controllable refresh rate
 * Text drawing with alignment options
+* Buffers can be saved to/loaded from files and used like texture assets
