@@ -90,16 +90,19 @@ namespace DrawingExample
 
         static void Painter_Paint(object sender, EventArgs e)
         {
-            Painter.Clear();
+            // A Clear() call is not needed since the paint buffer covers the whole screen.
 
+            // Draw the canvas
+            Painter.ActiveBuffer.DrawBuffer(paintBuffer, 0, 0, BufferDrawMode.DrawOver);
+
+            // Draw the color pallette
             for (int i = 0; i < rgbw.Length; i++)
             {
                 Painter.ActiveBuffer.DrawBox(0, i * 5, 5, 5, rgbw[i]);
             }
 
+            // Draw the extension showing the active color
             Painter.ActiveBuffer.DrawBox(5, pen * 5, 2, 5, rgbw[pen]);
-
-            Painter.ActiveBuffer.DrawBuffer(paintBuffer, 0, 0);
         }
     }
 }

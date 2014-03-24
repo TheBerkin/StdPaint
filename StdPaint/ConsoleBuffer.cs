@@ -286,7 +286,8 @@ namespace StdPaint
         /// <param name="buffer">The buffer to draw.</param>
         /// <param name="x">The X position to begin drawing at.</param>
         /// <param name="y">The Y position to begin drawing at.</param>
-        public void DrawBuffer(ConsoleBuffer buffer, int x, int y)
+        /// <param name="drawMode">Specified how the buffer should be drawn.</param>
+        public void DrawBuffer(ConsoleBuffer buffer, int x, int y, BufferDrawMode drawMode)
         {
             var b = _buffer;
             var b2 = buffer.Buffer;
@@ -297,7 +298,22 @@ namespace StdPaint
                 {
                     if (InBounds(x + i, y + j))
                     {
-                        b[j + y, i + x].Attributes |= b2[j, i].Attributes;
+                        switch(drawMode)
+                        {
+                            case BufferDrawMode.Additive:
+                                b[j + y, i + x].Attributes |= b2[j, i].Attributes;
+                                break;
+                            case BufferDrawMode.DrawOver:
+                                b[j + y, i + x].Attributes = b2[j, i].Attributes;
+                                break;
+                            case BufferDrawMode.IgnoreBlack:
+                                if (b2[j,i].Attributes != BufferUnitAttributes.None)
+                                {
+                                    b[j + y, i + x].Attributes = b2[j, i].Attributes;
+                                }
+                                break;
+                        }
+                        
                         b[j + y, i + x].CharData = b2[j, i].CharData;
                     }
                 }

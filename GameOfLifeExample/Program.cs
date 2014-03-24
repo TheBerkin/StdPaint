@@ -22,7 +22,7 @@ namespace GameOfLifeExample
             Painter.LeftButtonUp += Painter_LeftButtonUp;
             Painter.Paint += Painter_Paint;
 
-            Painter.Run(64, 64, 30);
+            Painter.Run(128, 64, 30);
         }
 
         static void Painter_Paint(object sender, EventArgs e)
