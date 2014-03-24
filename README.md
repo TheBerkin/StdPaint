@@ -1,14 +1,12 @@
 StdPaint
 ========
 
-A simple graphics library for console applications.
 
-
-StdPaint is a library that provides a fast, flexible way to access and manipulate the console buffer. It makes use of a double-buffered rendering loop to provide flicker-free rendering of graphics to the console buffer.
+StdPaint provides a fast, flexible way to directly access and manipulate the console buffer. It uses a double-buffered, multithreaded system to make sure that rendering is as fast as possible.
 
 Features
 -----
-* Built-in shape drawing methods
+* Several built-in drawing methods, such as circle, box, line, and flood fill
 * Create additional buffers for drawing graphics for later use
 * Mouse event handling with buffer coordinates
 * Controllable refresh rate
