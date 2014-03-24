@@ -18,6 +18,7 @@ namespace StdPaint
         /// Creates a new VerticalStripeBufferBrush with the specified colors.
         /// </summary>
         /// <param name="colors">The colors for the stripes.</param>
+        /// <param name="thickness">The thickness of the stripes.</param>
         public VerticalStripeBufferBrush(int thickness, params BufferColor[] colors)
         {
             if (thickness <= 0)

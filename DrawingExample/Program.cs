@@ -26,12 +26,12 @@ namespace DrawingExample
             Painter.LeftButtonUp += Painter_LeftButtonUp;
             Painter.RightButtonDown += Painter_RightButtonDown;
 
-            Painter.Run(136, 100, 60);
+            Painter.Run(136, 100, 12);
         }
 
         static void Painter_RightButtonDown(object sender, PainterMouseEventArgs e)
         {
-            paintBuffer.FloodFill(e.UnitLocation.X, e.UnitLocation.Y, new CheckeredBufferBrush(pallette[pen], BufferColor.Gray));
+            paintBuffer.FloodFill(e.UnitLocation.X, e.UnitLocation.Y, pallette[pen]);
         }
 
         static Point pLast = new Point(-1, -1);

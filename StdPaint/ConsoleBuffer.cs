@@ -815,59 +815,66 @@ namespace StdPaint
         {
             var b = _buffer;
             var b2 = buffer.Buffer;
-
-            if ((x | y) == 0 && buffer.UnitCount == this.UnitCount) // Just a small optimization :)
+            int offx = 0;
+            int offy = 0;
+            int w = buffer._width;
+            int h = buffer._height;
+            if (x + w < 0 || y + h == 0 || y >= _height || x >= _width)
             {
-                Array.Copy(buffer._buffer, _buffer, UnitCount);
+                return;
             }
-            else                
+            if (w + x > _width)
             {
-                int offx = 0;
-                int offy = 0;
-                int w = buffer._width;
-                int h = buffer._height;
-                if (x + w < 0 || y + h == 0 || y >= _height || x >= _width)
-                {
-                    return;
-                }
-                if (w + x > _width)
-                {
-                    w -= w + x - _width;
-                }
-                if (x < 0)
-                {
-                    offx = -x;
-                }
-                if (h + y > _height)
-                {
-                    h -= h + y - _height;
-                }
-                if (y < 0)
-                {
-                    offy = -y;
-                }
-                
-                for (int i = w - 1; i >= offx; i--)
-                for (int j = h - 1; j >= offy; j--)
-                {
-                    switch (drawMode)
+                w -= w + x - _width;
+            }
+            if (x < 0)
+            {
+                offx = -x;
+            }
+            if (h + y > _height)
+            {
+                h -= h + y - _height;
+            }
+            if (y < 0)
+            {
+                offy = -y;
+            }
+
+            switch (drawMode)
+            {
+                case BufferDrawMode.Additive:
                     {
-                        case BufferDrawMode.Additive:
+                        for (int i = w - 1; i >= offx; i--)
+                        for (int j = h - 1; j >= offy; j--)
+                        {
                             b[j + y + offy, i + x + offx]._attrs |= b2[j, i]._attrs;
-                            break;
-                        case BufferDrawMode.DrawOver:
+                            b[j + y + offy, i + x + offx].CharData = b2[j, i].CharData;
+                        }     
+                    }
+                    break;
+                case BufferDrawMode.DrawOver:
+                    {
+                        for (int i = w - 1; i >= offx; i--)
+                        for (int j = h - 1; j >= offy; j--)
+                        {
                             b[j + y + offy, i + x + offx]._attrs = b2[j, i]._attrs;
-                            break;
-                        case BufferDrawMode.IgnoreBlack:
+                            b[j + y + offy, i + x + offx].CharData = b2[j, i].CharData;
+                        }
+                    }
+                    break;
+                case BufferDrawMode.IgnoreBlack:
+                    {
+                        for (int i = w - 1; i >= offx; i--)
+                        for (int j = h - 1; j >= offy; j--)
+                        {
                             if (b2[j, i].BackColor != BufferColor.Black)
                             {
                                 b[j + y + offy, i + x + offx]._attrs = b2[j, i]._attrs;
                             }
-                            break;
+                            b[j + y + offy, i + x + offx].CharData = b2[j, i].CharData;
+                        }
                     }
-
-                    b[j + y + offy, i + x + offx].CharData = b2[j, i].CharData;
-                }
+                    break;
             }
         }
 
