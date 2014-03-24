@@ -26,7 +26,7 @@ namespace StdPaint
 
         static ConsoleBuffer backBuffer, frontBuffer, activeBuffer = null;
 
-        static int refreshInterval = 3;
+        static int refreshInterval = 1;
 
         static ConsoleEventCallback closeEvent = ConsoleCloseEvent;
 
@@ -256,24 +256,6 @@ namespace StdPaint
         
         private static void GraphicsDrawThread()
         {
-            while (enabled)
-            {
-                if (Paint != null)
-                {
-                    Paint(null, null);
-                }
-
-                Thread.Sleep(refreshInterval);
-            }            
-        }
-
-        private static void GraphicsRenderThread()
-        {
-            int w = Console.BufferWidth;
-            int h = Console.BufferHeight;
-            COORD cFrom = new COORD(0, 0);
-            COORD cTo = new COORD((short)w, (short)h);
-            SMALL_RECT rect = new SMALL_RECT(0, 0, (short)w, (short)h);
             var bb = backBuffer.Buffer;
             var fb = frontBuffer.Buffer;
             int length = backBuffer.UnitCount * BufferUnitInfo.SizeBytes;
@@ -281,11 +263,40 @@ namespace StdPaint
             {
                 fixed (BufferUnitInfo* bbPtr = bb)
                 fixed (BufferUnitInfo* fbPtr = fb)
-                while (enabled)
                 {
-                    Native.CopyMemory(fbPtr, bbPtr, length);
-                    Native.WriteConsoleOutput(conHandle, bb, cTo, cFrom, ref rect);
-                    Thread.Sleep(refreshInterval);
+                    while (enabled)
+                    {
+                        if (Paint != null)
+                        {
+                            Paint(null, null);
+                        }
+
+                        Native.CopyMemory(fbPtr, bbPtr, length);
+                        Thread.Sleep(refreshInterval);
+                    }
+                }
+            }
+        }
+
+        private static void GraphicsRenderThread()
+        {     
+            int w = Console.BufferWidth;
+            int h = Console.BufferHeight;
+            COORD cFrom = new COORD(0, 0);
+            COORD cTo = new COORD((short)w, (short)h);
+            SMALL_RECT rect = new SMALL_RECT(0, 0, (short)w, (short)h);
+            var bb = backBuffer.Buffer;
+            var fb = frontBuffer.Buffer;
+            unsafe
+            {
+                fixed (BufferUnitInfo* bbPtr = bb)
+                fixed (BufferUnitInfo* fbPtr = fb)
+                {
+                    while (enabled)
+                    {                        
+                        Native.WriteConsoleOutput(conHandle, fb, cTo, cFrom, ref rect);
+                        Thread.Sleep(refreshInterval);
+                    }
                 }
             }
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using System.IO;
 
 namespace StdPaint
@@ -603,14 +604,7 @@ namespace StdPaint
 
             if ((x | y) == 0 && buffer.UnitCount == this.UnitCount) // Just a small optimization :)
             {
-                unsafe
-                {
-                    fixed (BufferUnitInfo* dest = _buffer)
-                    fixed (BufferUnitInfo* src = buffer._buffer)
-                    {
-                        Native.CopyMemory(dest, src, BufferUnitInfo.SizeBytes * this.UnitCount);
-                    }
-                }
+                Array.Copy(buffer._buffer, _buffer, UnitCount);
             }
             else                
             {
@@ -639,8 +633,8 @@ namespace StdPaint
                     offy = -y;
                 }
                 
-                for (int i = w; i >= offx; i--)
-                for (int j = h; j >= offy; j--)
+                for (int i = w - 1; i >= offx; i--)
+                for (int j = h - 1; j >= offy; j--)
                 {
                     switch (drawMode)
                     {

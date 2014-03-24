@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using StdPaint;
 
 namespace DrawingExample
@@ -25,7 +26,7 @@ namespace DrawingExample
             Painter.LeftButtonUp += Painter_LeftButtonUp;
             Painter.RightButtonDown += Painter_RightButtonDown;
 
-            Painter.Run(136, 100, 30);
+            Painter.Run(136, 100, 60);
         }
 
         static void Painter_RightButtonDown(object sender, PainterMouseEventArgs e)
@@ -69,11 +70,13 @@ namespace DrawingExample
 
         static void Painter_MouseMove(object sender, PainterMouseEventArgs e)
         {
+            
             if (penOn)
             {
                 paintBuffer.DrawLine(pLast.X, pLast.Y, e.UnitLocation.X, e.UnitLocation.Y, pallette[pen]);
-            }
+            }            
             pLast = e.UnitLocation;
+            
         }
 
         static void Painter_Starting(object sender, EventArgs e)
@@ -82,7 +85,7 @@ namespace DrawingExample
         }
 
         static void Painter_Paint(object sender, EventArgs e)
-        {
+        {            
             // A Clear() call is not needed since the paint buffer covers the whole screen.
 
             // Draw the canvas
@@ -95,7 +98,7 @@ namespace DrawingExample
             }
 
             // Draw the extension showing the active color
-            Painter.ActiveBuffer.DrawBox(5, pen * 5, 2, 5, pallette[pen]);                         
+            Painter.ActiveBuffer.DrawBox(5, pen * 5, 2, 5, pallette[pen]);
         }
     }
 }

@@ -11,19 +11,14 @@ namespace StdPaint
     /// </summary>
     public class PainterMouseEventArgs : EventArgs
     {
-        Point _point;
-
         /// <summary>
-        /// The location of the cursor, in buffer units.
+        /// The location of the cursor, in buffer units, when the event was raised.
         /// </summary>
-        public Point UnitLocation
-        {
-            get { return _point; }
-        }
+        public readonly Point UnitLocation;
 
         internal PainterMouseEventArgs(Point point)
         {
-            _point = point;
+            this.UnitLocation = point;
         }
     }
 }
