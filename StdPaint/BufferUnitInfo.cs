@@ -23,6 +23,9 @@ namespace StdPaint
 
         internal short _attrs;
 
+        /// <summary>
+        /// The raw color attributes for this buffer unit.
+        /// </summary>
         public BufferUnitAttributes Attributes
         {
             get { return (BufferUnitAttributes)_attrs; }
@@ -37,6 +40,7 @@ namespace StdPaint
             get { return (BufferColor)(_attrs & 0x0F); }
             set
             {
+                if (value == BufferColor.Identity) return;
                 _attrs = (short)((_attrs & 0xF0) | (int)value);
             }
         }
@@ -49,6 +53,7 @@ namespace StdPaint
             get { return (BufferColor)(_attrs >> 4); }
             set
             {
+                if (value == BufferColor.Identity) return;
                 _attrs = (short)((_attrs & 0x0F) | ((int)value << 4));
             }
         }

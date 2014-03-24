@@ -50,12 +50,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BufferBrush.cs" />
     <Compile Include="BufferColor.cs" />
     <Compile Include="BufferDrawMode.cs" />
     <Compile Include="BufferUnitInfo.cs" />
+    <Compile Include="CheckeredBufferBrush.cs" />
     <Compile Include="ConsoleBuffer.cs" />
     <Compile Include="BufferUnitAttributes.cs" />
     <Compile Include="COORD.cs" />
+    <Compile Include="HorizontalStripeBufferBrush.cs" />
     <Compile Include="MouseMessages.cs" />
     <Compile Include="MSLLHOOKSTRUCT.cs" />
     <Compile Include="Native.cs" />
@@ -65,7 +68,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RECT.cs" />
     <Compile Include="SMALL_RECT.cs" />
+    <Compile Include="SolidBufferBrush.cs" />
     <Compile Include="TextAlignment.cs" />
+    <Compile Include="VerticalStripeBufferBrush.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

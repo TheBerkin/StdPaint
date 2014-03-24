@@ -31,7 +31,7 @@ namespace DrawingExample
 
         static void Painter_RightButtonDown(object sender, PainterMouseEventArgs e)
         {
-            paintBuffer.FloodFill(e.UnitLocation.X, e.UnitLocation.Y, pallette[pen]);
+            paintBuffer.FloodFill(e.UnitLocation.X, e.UnitLocation.Y, new CheckeredBufferBrush(pallette[pen], BufferColor.Gray));
         }
 
         static Point pLast = new Point(-1, -1);
@@ -43,7 +43,16 @@ namespace DrawingExample
                                                   BufferColor.Magenta,
                                                   BufferColor.Cyan,
                                                   BufferColor.Yellow,
-                                                  BufferColor.White
+                                                  BufferColor.DarkGray,
+                                                  BufferColor.White,
+                                                  BufferColor.DarkBlue,
+                                                  BufferColor.DarkGreen,
+                                                  BufferColor.DarkRed,
+                                                  BufferColor.DarkMagenta,
+                                                  BufferColor.DarkCyan,
+                                                  BufferColor.DarkYellow,
+                                                  BufferColor.Black,
+                                                  BufferColor.Gray
                                               };
 
         static int pen = 3;
@@ -59,9 +68,9 @@ namespace DrawingExample
         {
             pLast = e.UnitLocation;
 
-            if (!penOn && e.UnitLocation.X < 5 && e.UnitLocation.Y < pallette.Length * 5)
+            if (!penOn && e.UnitLocation.X < 10 && e.UnitLocation.Y < pallette.Length * 5)
             {
-                pen = e.UnitLocation.Y / 5;
+                pen = e.UnitLocation.Y / 5 + (e.UnitLocation.X / 5) * 8;
             }
 
             penOn = true;
@@ -69,8 +78,7 @@ namespace DrawingExample
         }
 
         static void Painter_MouseMove(object sender, PainterMouseEventArgs e)
-        {
-            
+        {            
             if (penOn)
             {
                 paintBuffer.DrawLine(pLast.X, pLast.Y, e.UnitLocation.X, e.UnitLocation.Y, pallette[pen]);
@@ -94,11 +102,11 @@ namespace DrawingExample
             // Draw the color pallette
             for (int i = 0; i < pallette.Length; i++)
             {
-                Painter.ActiveBuffer.DrawBox(0, i * 5, 5, 5, pallette[i]);
+                Painter.ActiveBuffer.DrawBox(5 * (i / 8), (i % 8) * 5, 5, 5, pallette[i]);
             }
 
             // Draw the extension showing the active color
-            Painter.ActiveBuffer.DrawBox(5, pen * 5, 2, 5, pallette[pen]);
+            Painter.ActiveBuffer.DrawBox(5 * (pen / 8) + 5, (pen % 8) * 5, 2, 5, pallette[pen]);
         }
     }
 }

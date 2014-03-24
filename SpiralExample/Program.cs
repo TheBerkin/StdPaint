@@ -9,13 +9,13 @@ namespace SpiralExample
 {
     class Program
     {
-        static BufferColor[] colors =   {
-                                            BufferColor.Blue,
-                                            BufferColor.Green,
-                                            BufferColor.Red,
-                                            BufferColor.Magenta,
-                                            BufferColor.Cyan,
-                                            BufferColor.Yellow
+        static BufferBrush[] colors =   {
+                                            new CheckeredBufferBrush(BufferColor.Blue, BufferColor.DarkBlue),
+                                            new VerticalStripeBufferBrush(2, BufferColor.Green, BufferColor.DarkGreen),
+                                            SolidBufferBrush.Red,
+                                            SolidBufferBrush.Magenta,
+                                            new CheckeredBufferBrush(BufferColor.Cyan, BufferColor.Blue),
+                                            new HorizontalStripeBufferBrush(1, BufferColor.Yellow, BufferColor.DarkYellow)
                                         };
 
         static long ticks = 0;
@@ -36,7 +36,7 @@ namespace SpiralExample
             Painter.MouseMove += Painter_MouseMove;
             Painter.LeftButtonDown += Painter_LeftButtonDown;
             Painter.LeftButtonUp += Painter_LeftButtonUp;
-
+            
             Painter.Run(64, 64, 30);
         }
 
@@ -84,7 +84,7 @@ namespace SpiralExample
                 {
                     o += SpiralStripeOffset(center, p, d);
                 }
-                b[j, i].BackColor = colors[o % colors.Length];
+                b[j, i].BackColor = colors[o % colors.Length].GetColor(i,j);
             }
 
             ticks++;

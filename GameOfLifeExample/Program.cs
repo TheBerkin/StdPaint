@@ -18,11 +18,17 @@ namespace GameOfLifeExample
 
             Painter.Starting += Painter_Starting;
             Painter.MouseMove += Painter_MouseMove;
+            Painter.RightButtonDown += Painter_RightButtonDown;
             Painter.LeftButtonDown += Painter_LeftButtonDown;
             Painter.LeftButtonUp += Painter_LeftButtonUp;
             Painter.Paint += Painter_Paint;
 
             Painter.Run(128, 64, 30);
+        }
+
+        static void Painter_RightButtonDown(object sender, PainterMouseEventArgs e)
+        {
+            Painter.BackBuffer.DrawCircle(e.UnitLocation.X, e.UnitLocation.Y, 6, 2, BufferColor.White, BufferColor.Red);
         }
 
         static void Painter_Paint(object sender, EventArgs e)

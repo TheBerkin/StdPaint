@@ -138,7 +138,7 @@ namespace StdPaint
         /// <param name="x">The X coordinate to begin filling at.</param>
         /// <param name="y">The Y coordinate to begin filling at.</param>
         /// <param name="color">The color to fill the region with.</param>
-        public unsafe void FloodFill(int x, int y, BufferColor color)
+        public void FloodFill(int x, int y, BufferColor color)
         {
             if (!InBounds(x, y)) return;
             var initColor = _buffer[y, x].BackColor;
@@ -191,6 +191,68 @@ namespace StdPaint
                         }
                     }                    
                 }                
+            }
+        }
+
+        /// <summary>
+        /// Flood fills a closed region containing the specified coordinates with a brush.
+        /// </summary>
+        /// <param name="x">The X coordinate to begin filling at.</param>
+        /// <param name="y">The Y coordinate to begin filling at.</param>
+        /// <param name="brush">The brush to fill the region with.</param>
+        public unsafe void FloodFill(int x, int y, BufferBrush brush)
+        {
+            if (!InBounds(x, y)) return;
+            var initColor = _buffer[y, x].BackColor;
+            if (brush.GetColor(x,y) == initColor) return;
+            List<Point> queue = new List<Point>(32);
+            queue.Add(new Point(x, y));
+            Point p;
+            int w, e, j;
+            for (int i = 0; i < queue.Count; i++)
+            {
+                p = queue[i];
+                w = e = p.X;
+                while (w - 1 >= 0)
+                {
+                    if (_buffer[p.Y, w - 1].BackColor == initColor)
+                    {
+                        w--;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                while (e + 1 < _width)
+                {
+                    if (_buffer[p.Y, e + 1].BackColor == initColor)
+                    {
+                        e++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                for (j = w; j <= e; j++)
+                {
+                    _buffer[p.Y, j].BackColor = brush.GetColor(j, p.Y);
+                    if (p.Y + 1 < _height)
+                    {
+                        if (_buffer[p.Y + 1, j].BackColor == initColor)
+                        {
+                            queue.Add(new Point(j, p.Y + 1));
+                        }
+                    }
+                    if (p.Y - 1 >= 0)
+                    {
+                        if (_buffer[p.Y - 1, j].BackColor == initColor)
+                        {
+                            queue.Add(new Point(j, p.Y - 1));
+                        }
+                    }
+                }
             }
         }
 
@@ -460,7 +522,7 @@ namespace StdPaint
             if (thickness < 0) thickness *= -1;
             if (thickness > radius) thickness = radius;
             int rra = radius * radius;
-            int rrb = rra - thickness * thickness;
+            int rrb = (radius - thickness) * (radius - thickness);
             int d = 0;
             for(int i = -radius; i <= radius; i++)
             for (int j = -radius; j <= radius; j++)
@@ -468,7 +530,7 @@ namespace StdPaint
                 d = i * i + j * j;
                 if (InBounds(x + i, y + j))
                 {
-                    if(d <= rrb)
+                    if(d < rrb)
                     {
                         _buffer[y + j, x + i].BackColor = fill;
                     }
