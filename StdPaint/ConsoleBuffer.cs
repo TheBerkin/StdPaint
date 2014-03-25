@@ -474,7 +474,7 @@ namespace StdPaint
         /// <summary>
         /// Draws a solid box with the specified dimensions to the buffer.
         /// </summary>
-        /// <param name="x">the X coordinate of the box.</param>
+        /// <param name="x">The X coordinate of the box.</param>
         /// <param name="y">The Y coordinate of the box.</param>
         /// <param name="w">The width of the box.</param>
         /// <param name="h">The height of the box.</param>
@@ -507,7 +507,7 @@ namespace StdPaint
         /// <summary>
         /// Draws a solid box with the specified dimensions to the buffer.
         /// </summary>
-        /// <param name="x">the X coordinate of the box.</param>
+        /// <param name="x">The X coordinate of the box.</param>
         /// <param name="y">The Y coordinate of the box.</param>
         /// <param name="w">The width of the box.</param>
         /// <param name="h">The height of the box.</param>
@@ -533,6 +533,52 @@ namespace StdPaint
                     if (InBounds(x + i, y + j))
                     {
                         b[y + j, x + i].BackColor = brush.GetColor(x + i, y + j);
+                    }
+                }
+        }
+
+        /// <summary>
+        /// Draws a box with the specified border and fill brushes.
+        /// </summary>
+        /// <param name="x">The X position of the box.</param>
+        /// <param name="y">The Y position of the box.</param>
+        /// <param name="w">The width of the box.</param>
+        /// <param name="h">The height of the box.</param>
+        /// <param name="thickness">The border thickness of the box.</param>
+        /// <param name="border">The brush to draw the border with.</param>
+        /// <param name="fill">The brush to draw the fill with.</param>
+        public void DrawBox(int x, int y, int w, int h, int thickness, BufferBrush border, BufferBrush fill)
+        {
+            if (w < 0)
+            {
+                w *= -1;
+                x -= w;
+            }
+            if (h < 0)
+            {
+                h *= -1;
+                y -= h;
+            }
+            if (thickness < 0)
+            {
+                thickness *= -1;
+            }
+
+            var b = _buffer;
+
+            for (int i = 0; i < w; i++)
+                for (int j = 0; j < h; j++)
+                {
+                    if (InBounds(x + i, y + j))
+                    {
+                        if ((i >= thickness && i < w - thickness) && (j >= thickness && j < h - thickness))
+                        {
+                            b[y + j, x + i].BackColor = fill.GetColor(x + i, y + j);
+                        }
+                        else
+                        {
+                            b[y + j, x + i].BackColor = border.GetColor(x + i, y + j);
+                        }
                     }
                 }
         }

@@ -10,7 +10,7 @@ namespace SpiralExample
     class Program
     {
         static BufferBrush[] colors =   {
-                                            new CheckeredBufferBrush(BufferColor.Blue, BufferColor.DarkBlue),
+                                            new RandomColorBufferBrush(BufferColor.Blue, BufferColor.DarkBlue, BufferColor.Green),
                                             new VerticalStripeBufferBrush(2, BufferColor.Green, BufferColor.DarkGreen),
                                             SolidBufferBrush.Red,
                                             SolidBufferBrush.Magenta,

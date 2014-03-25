@@ -32,5 +32,7 @@ namespace StdPaint
             this.X = x;
             this.Y = y;
         }
+
+
     }
 }

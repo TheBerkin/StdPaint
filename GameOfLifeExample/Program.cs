@@ -23,12 +23,12 @@ namespace GameOfLifeExample
             Painter.LeftButtonUp += Painter_LeftButtonUp;
             Painter.Paint += Painter_Paint;
 
-            Painter.Run(128, 64, 30);
+            Painter.Run(128, 64, 25);
         }
 
         static void Painter_RightButtonDown(object sender, PainterMouseEventArgs e)
         {
-            Painter.BackBuffer.DrawCircle(e.UnitLocation.X, e.UnitLocation.Y, 6, 2, BufferColor.White, BufferColor.Red);
+            Painter.BackBuffer.DrawCircle(e.UnitLocation.X, e.UnitLocation.Y, 16, new RandomColorBufferBrush(BufferColor.Identity, BufferColor.White));
         }
 
         static void Painter_Paint(object sender, EventArgs e)
@@ -57,7 +57,7 @@ namespace GameOfLifeExample
                 else if (n > 3 && c != black)
                 {
                     b2[j, i].Attributes = black;
-                }
+                }                
                 else if (n == 3 && c == black)
                 {
                     b2[j, i].Attributes = PickColor();

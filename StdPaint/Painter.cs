@@ -22,7 +22,7 @@ namespace StdPaint
         static IntPtr _hookID = IntPtr.Zero;
         static IntPtr consoleHandle = Native.GetConsoleWindow();
         static WndProcCallback _proc = HookCallback;
-        static RECT clientRect;
+        static Rectangle clientRect;
 
         static ConsoleBuffer backBuffer, frontBuffer, activeBuffer = null;
 

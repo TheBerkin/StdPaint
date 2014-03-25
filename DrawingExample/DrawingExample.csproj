@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="StdPaint, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="StdPaint, Version=1.0.5195.33471, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\StdPaint\bin\Release\StdPaint.dll</HintPath>
     </Reference>

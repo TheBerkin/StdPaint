@@ -55,7 +55,7 @@ namespace DrawingExample
                                                   BufferColor.Gray
                                               };
 
-        static int pen = 3;
+        static int pen = 0;
 
         static bool penOn = false;
 
@@ -98,7 +98,7 @@ namespace DrawingExample
 
             // Draw the canvas
             Painter.ActiveBuffer.DrawBuffer(paintBuffer, 0, 0, BufferDrawMode.DrawOver);
-                        
+
             // Draw the color pallette
             for (int i = 0; i < pallette.Length; i++)
             {

@@ -58,6 +58,7 @@
     <Compile Include="ConsoleBuffer.cs" />
     <Compile Include="BufferUnitAttributes.cs" />
     <Compile Include="COORD.cs" />
+    <Compile Include="GUI\Element.cs" />
     <Compile Include="HorizontalStripeBufferBrush.cs" />
     <Compile Include="MouseMessages.cs" />
     <Compile Include="MSLLHOOKSTRUCT.cs" />
@@ -66,10 +67,12 @@
     <Compile Include="PainterMouseEventArgs.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RECT.cs" />
+    <Compile Include="RandomColorBufferBrush.cs" />
+    <Compile Include="Rectangle.cs" />
     <Compile Include="SMALL_RECT.cs" />
     <Compile Include="SolidBufferBrush.cs" />
     <Compile Include="TextAlignment.cs" />
+    <Compile Include="Utils.cs" />
     <Compile Include="VerticalStripeBufferBrush.cs" />
   </ItemGroup>
   <ItemGroup>
