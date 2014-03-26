@@ -851,6 +851,80 @@ namespace StdPaint
         }
 
         /// <summary>
+        /// Draws a colored line to the buffer.
+        /// </summary>
+        /// <param name="a">The starting point of the line.</param>
+        /// <param name="b">The ending point of the line.</param>
+        /// <param name="color">The color of the line.</param>
+        public void DrawLine(Point a, Point b, BufferColor color)
+        {
+            DrawLine(a.X, a.Y, b.X, b.Y, color);
+        }
+
+        /// <summary>
+        /// Draws a line to the buffer with the specified brush.
+        /// </summary>
+        /// <param name="a">The starting point of the line.</param>
+        /// <param name="b">The ending point of the line.</param>
+        /// <param name="brush">The brush to draw the line with.</param>
+        public void DrawLine(Point a, Point b, BufferBrush brush)
+        {
+            DrawLine(a.X, a.Y, b.X, b.Y, brush);
+        }
+
+        /// <summary>
+        /// Draws a triangle to the buffer.
+        /// </summary>
+        /// <param name="triangle">The triangle to draw.</param>
+        /// <param name="color">The color to draw the triangle.</param>
+        public void DrawTriangle(Triangle triangle, BufferColor color)
+        {
+            DrawLine(triangle.A, triangle.B, color);
+            DrawLine(triangle.B, triangle.C, color);
+            DrawLine(triangle.C, triangle.A, color);
+        }
+
+        /// <summary>
+        /// Draws a triangle with the specified border and fill brushes.
+        /// </summary>
+        /// <param name="triangle">The triangle to draw.</param>
+        /// <param name="border">The border brush.</param>
+        /// <param name="fill">The fill brush.</param>
+        public void DrawTriangle(Triangle triangle, BufferBrush border, BufferBrush fill)
+        {            
+            var bounds = triangle.GetBounds();
+            double area = triangle.Area;
+            Point p = new Point();
+            double sum = 0;
+            for (int i = bounds.Left; i < bounds.Right; i++)
+            for (int j = bounds.Top; j < bounds.Bottom; j++)
+            {
+                p.X = i;
+                p.Y = j;
+                sum = Triangle.GetArea(p, triangle.A, triangle.B) +
+                    Triangle.GetArea(p, triangle.B, triangle.C) +
+                    Triangle.GetArea(p, triangle.C, triangle.A);
+                if (sum >= area - 1 && sum <= area + 1)
+                {
+                    _buffer[j, i].BackColor = fill.GetColor(i, j);
+                }
+            }
+            DrawTriangle(triangle, border);
+        }
+
+        /// <summary>
+        /// Draws a triangle to the buffer.
+        /// </summary>
+        /// <param name="triangle">The triangle to draw.</param>
+        /// <param name="brush">The brush to draw the triangle with.</param>
+        public void DrawTriangle(Triangle triangle, BufferBrush brush)
+        {
+            DrawLine(triangle.A, triangle.B, brush);
+            DrawLine(triangle.B, triangle.C, brush);
+            DrawLine(triangle.C, triangle.A, brush);
+        }
+
+        /// <summary>
         /// Draws the contents of another buffer onto this buffer at the specified location.
         /// </summary>
         /// <param name="buffer">The buffer to draw.</param>

@@ -75,5 +75,14 @@ namespace StdPaint
             get { return this.Bottom - this.Top; }
             set { this.Bottom = this.Top + value; }
         }
+
+        /// <summary>
+        /// Returns a string representation of this Rectangle object.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return String.Format("T={0}; B={1}; L={2}; R={3};", Top, Bottom, Left, Right);
+        }
     }
 }

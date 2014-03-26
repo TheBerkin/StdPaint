@@ -72,6 +72,7 @@
     <Compile Include="SMALL_RECT.cs" />
     <Compile Include="SolidBufferBrush.cs" />
     <Compile Include="TextAlignment.cs" />
+    <Compile Include="Triangle.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="VerticalStripeBufferBrush.cs" />
   </ItemGroup>
