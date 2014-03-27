@@ -7,8 +7,9 @@ StdPaint provides a fast, flexible way to directly access and manipulate the con
 Features
 -----
 * Several built-in drawing methods, such as circle, box, line, and flood fill
+* Dynamic, customizable brush effects for stylistic graphics
 * Create additional buffers for drawing graphics for later use
-* Mouse event handling with buffer coordinates
+* Keyboard and mouse input handling
 * Controllable refresh rate
 * Text drawing with alignment options
 * Buffers can be saved to/loaded from files and used like texture assets
