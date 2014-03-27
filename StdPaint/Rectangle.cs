@@ -77,6 +77,16 @@ namespace StdPaint
         }
 
         /// <summary>
+        /// Returns whether the specified point is contained within the bounds of the rectangle.
+        /// </summary>
+        /// <param name="point">The point to test.</param>
+        /// <returns></returns>
+        public bool Contains(Point point)
+        {
+            return point.X >= this.Left && point.X < this.Right && point.Y >= this.Top && point.Y < this.Bottom;
+        }
+
+        /// <summary>
         /// Returns a string representation of this Rectangle object.
         /// </summary>
         /// <returns></returns>

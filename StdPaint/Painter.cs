@@ -23,6 +23,7 @@ namespace StdPaint
         static IntPtr consoleHandle = Native.GetConsoleWindow();
         static WndProcCallback _proc = HookCallback;
         static Rectangle clientRect;
+        static Stopwatch fpsCounter = new Stopwatch();
 
         static ConsoleBuffer backBuffer, frontBuffer, activeBuffer = null;
 
@@ -109,6 +110,18 @@ namespace StdPaint
         public static BufferUnitInfo[,] ActiveBufferData
         {
             get { return activeBuffer.Buffer; }
+        }
+
+        /// <summary>
+        /// Gets the current frame rate.
+        /// </summary>
+        public static long CurrentFrameRate
+        {
+            get
+            {
+                long t = fpsCounter.ElapsedTicks;
+                return t > 0 ? Stopwatch.Frequency / t : Stopwatch.Frequency;
+            }
         }
 
         /// <summary>
@@ -287,17 +300,12 @@ namespace StdPaint
             SMALL_RECT rect = new SMALL_RECT(0, 0, (short)w, (short)h);
             var bb = backBuffer.Buffer;
             var fb = frontBuffer.Buffer;
-            unsafe
+            while (enabled)
             {
-                fixed (BufferUnitInfo* bbPtr = bb)
-                fixed (BufferUnitInfo* fbPtr = fb)
-                {
-                    while (enabled)
-                    {                        
-                        Native.WriteConsoleOutput(conHandle, fb, cTo, cFrom, ref rect);
-                        Thread.Sleep(refreshInterval);
-                    }
-                }
+                fpsCounter.Restart();
+                Native.WriteConsoleOutput(conHandle, fb, cTo, cFrom, ref rect);
+                Thread.Sleep(refreshInterval);
+                fpsCounter.Stop();
             }
         }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using StdPaint;
@@ -56,7 +57,6 @@ namespace DrawingExample
                                               };
 
         static int pen = 0;
-
         static bool penOn = false;
 
         static void Painter_LeftButtonUp(object sender, PainterMouseEventArgs e)
@@ -83,17 +83,25 @@ namespace DrawingExample
             {
                 paintBuffer.DrawLine(pLast.X, pLast.Y, e.UnitLocation.X, e.UnitLocation.Y, pallette[pen]);
             }            
-            pLast = e.UnitLocation;
-            
+            pLast = e.UnitLocation;            
         }
 
         static void Painter_Starting(object sender, EventArgs e)
         {
             paintBuffer = ConsoleBuffer.CreateScreenBuffer();
+            display = new SevenSegmentDisplay(new Point(Console.BufferWidth - 1, 1), 6, 0);
+            display.ForeBrush = new HorizontalStripeBufferBrush(1, BufferColor.Green, BufferColor.DarkGreen);
+            display.BackBrush = SolidBufferBrush.Black;
+
+            fpsThread = new Thread(FPSUpdateThread);
+            fpsThread.Start();
         }
 
+        static SevenSegmentDisplay display;
+        static Thread fpsThread;
+
         static void Painter_Paint(object sender, EventArgs e)
-        {            
+        {
             // A Clear() call is not needed since the paint buffer covers the whole screen.
 
             // Draw the canvas
@@ -107,6 +115,18 @@ namespace DrawingExample
 
             // Draw the extension showing the active color
             Painter.ActiveBuffer.DrawBox(5 * (pen / 8) + 5, (pen % 8) * 5, 2, 5, pallette[pen]);
+
+            // Draw framerate             
+            display.Draw(Painter.ActiveBuffer, Alignment.Right);                       
+        }
+
+        static void FPSUpdateThread()
+        {
+            while(Painter.Enabled)
+            {
+                display.Value = (int)Painter.CurrentFrameRate;
+                Thread.Sleep(200);
+            }
         }
     }
 }

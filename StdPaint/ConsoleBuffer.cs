@@ -584,6 +584,18 @@ namespace StdPaint
         }
 
         /// <summary>
+        /// Draws a box from the specified rectangle and brush information.
+        /// </summary>
+        /// <param name="rectangle">The bounds of the box to draw.</param>
+        /// <param name="thickness">The border thickness of the box.</param>
+        /// <param name="border">the border brush of the box.</param>
+        /// <param name="fill">The fill brush of the box.</param>
+        public void DrawBox(Rectangle rectangle, int thickness, BufferBrush border, BufferBrush fill)
+        {
+            DrawBox(rectangle.Top, rectangle.Left, rectangle.Width, rectangle.Height, thickness, border, fill);
+        }
+
+        /// <summary>
         /// Draws a solid circle to the buffer with the specified attributes.
         /// </summary>
         /// <param name="x">The X position of the circle, relative to its center.</param>
@@ -703,7 +715,7 @@ namespace StdPaint
         /// <param name="text">The string to print.</param>
         /// <param name="color">The color to assign to the text.</param>
         /// <param name="alignment">The alignment of the string.</param>
-        public void DrawString(int x, int y, string text, BufferColor color, TextAlignment alignment = TextAlignment.Left)
+        public void DrawString(int x, int y, string text, BufferColor color, Alignment alignment = Alignment.Left)
         {
             var b = _buffer;
             string[] lines = text.Split(new[] { '\n' });
@@ -714,14 +726,14 @@ namespace StdPaint
                 {
                     switch (alignment)
                     {
-                        case TextAlignment.Left:
+                        case Alignment.Left:
                             if (InBounds(x + j, y + i))
                             {
                                 b[y + i, x + j].CharData = lines[i][j];
                                 b[y + i, x + j].ForeColor = color;
                             }
                             break;
-                        case TextAlignment.Right:
+                        case Alignment.Right:
                             if (InBounds(x - len + j, y + i))
                             {
                                 b[y + i, x - len + j].CharData = lines[i][j];
@@ -740,7 +752,7 @@ namespace StdPaint
         /// <param name="y">The Y coordinate to start printing at.</param>
         /// <param name="alignment">The alinment to assign to the string.</param>
         /// <param name="args">An array of strings and attributes to print.</param>
-        public void DrawString(int x, int y, TextAlignment alignment, params object[] args)
+        public void DrawString(int x, int y, Alignment alignment, params object[] args)
         {
             var color = BufferColor.Gray;            
             foreach (var arg in args)

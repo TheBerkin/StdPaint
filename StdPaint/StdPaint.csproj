@@ -58,6 +58,8 @@
     <Compile Include="ConsoleBuffer.cs" />
     <Compile Include="BufferUnitAttributes.cs" />
     <Compile Include="COORD.cs" />
+    <Compile Include="GUI\Button.cs" />
+    <Compile Include="SevenSegmentDisplay.cs" />
     <Compile Include="GUI\Element.cs" />
     <Compile Include="HorizontalStripeBufferBrush.cs" />
     <Compile Include="MouseMessages.cs" />
@@ -71,7 +73,7 @@
     <Compile Include="Rectangle.cs" />
     <Compile Include="SMALL_RECT.cs" />
     <Compile Include="SolidBufferBrush.cs" />
-    <Compile Include="TextAlignment.cs" />
+    <Compile Include="Alignment.cs" />
     <Compile Include="Triangle.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="VerticalStripeBufferBrush.cs" />

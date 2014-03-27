@@ -22,9 +22,19 @@ namespace StdPaint.GUI
             set { _rect = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the position of the element.
+        /// </summary>
+        public Point Position
+        {
+            get { return _rect.Location; }
+            set { _rect.Location = value; }
+        }
+
         internal Element()
         {
             Painter.Paint += Painter_Paint;
+            _rect = new Rectangle();
         }
 
         private void Painter_Paint(object sender, EventArgs e)
