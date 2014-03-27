@@ -138,7 +138,7 @@ namespace StdPaint
         /// <summary>
         /// Fills the entire buffer with a brush.
         /// </summary>
-        /// <param name="color">The color to fill the buffer with.</param>
+        /// <param name="brush">The brush to fill the buffer with.</param>
         public unsafe void ClearBrush(BufferBrush brush)
         {
             for (int i = _width - 1; i >= 0; i--)
@@ -218,7 +218,7 @@ namespace StdPaint
         /// <param name="x">The X coordinate to begin filling at.</param>
         /// <param name="y">The Y coordinate to begin filling at.</param>
         /// <param name="brush">The brush to fill the region with.</param>
-        public unsafe void FloodFill(int x, int y, BufferBrush brush)
+        public void FloodFill(int x, int y, BufferBrush brush)
         {
             if (!InBounds(x, y)) return;
             var initColor = _buffer[y, x].BackColor;
@@ -474,7 +474,7 @@ namespace StdPaint
         /// <summary>
         /// Draws a solid box with the specified dimensions to the buffer.
         /// </summary>
-        /// <param name="x">the X coordinate of the box.</param>
+        /// <param name="x">The X coordinate of the box.</param>
         /// <param name="y">The Y coordinate of the box.</param>
         /// <param name="w">The width of the box.</param>
         /// <param name="h">The height of the box.</param>
@@ -507,7 +507,7 @@ namespace StdPaint
         /// <summary>
         /// Draws a solid box with the specified dimensions to the buffer.
         /// </summary>
-        /// <param name="x">the X coordinate of the box.</param>
+        /// <param name="x">The X coordinate of the box.</param>
         /// <param name="y">The Y coordinate of the box.</param>
         /// <param name="w">The width of the box.</param>
         /// <param name="h">The height of the box.</param>
@@ -535,6 +535,76 @@ namespace StdPaint
                         b[y + j, x + i].BackColor = brush.GetColor(x + i, y + j);
                     }
                 }
+        }
+
+        /// <summary>
+        /// Draws a box with the specified border and fill brushes.
+        /// </summary>
+        /// <param name="x">The X position of the box.</param>
+        /// <param name="y">The Y position of the box.</param>
+        /// <param name="w">The width of the box.</param>
+        /// <param name="h">The height of the box.</param>
+        /// <param name="thickness">The border thickness of the box.</param>
+        /// <param name="border">The brush to draw the border with.</param>
+        /// <param name="fill">The brush to draw the fill with.</param>
+        public void DrawBox(int x, int y, int w, int h, int thickness, BufferBrush border, BufferBrush fill)
+        {
+            if (w < 0)
+            {
+                w *= -1;
+                x -= w;
+            }
+            if (h < 0)
+            {
+                h *= -1;
+                y -= h;
+            }
+            if (thickness < 0)
+            {
+                thickness *= -1;
+            }
+
+            var b = _buffer;
+
+            for (int i = 0; i < w; i++)
+                for (int j = 0; j < h; j++)
+                {
+                    if (InBounds(x + i, y + j))
+                    {
+                        if ((i >= thickness && i < w - thickness) && (j >= thickness && j < h - thickness))
+                        {
+                            b[y + j, x + i].BackColor = fill.GetColor(x + i, y + j);
+                        }
+                        else
+                        {
+                            b[y + j, x + i].BackColor = border.GetColor(x + i, y + j);
+                        }
+                    }
+                }
+        }
+
+        /// <summary>
+        /// Draws a box from the specified rectangle and brush information.
+        /// </summary>
+        /// <param name="rectangle">The bounds of the box to draw.</param>
+        /// <param name="thickness">The border thickness of the box.</param>
+        /// <param name="border">the border brush of the box.</param>
+        /// <param name="fill">The fill brush of the box.</param>
+        public void DrawBox(Rectangle rectangle, int thickness, BufferBrush border, BufferBrush fill)
+        {
+            DrawBox(rectangle.Left, rectangle.Top, rectangle.Width, rectangle.Height, thickness, border, fill);
+        }
+
+        /// <summary>
+        /// Draws a box from the specified rectangle and brush information.
+        /// </summary>
+        /// <param name="rectangle">The bounds of the box to draw.</param>
+        /// <param name="thickness">The border thickness of the box.</param>
+        /// <param name="border">the border brush of the box.</param>
+        /// <param name="fill">The fill brush of the box.</param>
+        public void DrawBox(ref Rectangle rectangle, int thickness, BufferBrush border, BufferBrush fill)
+        {
+            DrawBox(rectangle.Top, rectangle.Left, rectangle.Width, rectangle.Height, thickness, border, fill);
         }
 
         /// <summary>
@@ -657,7 +727,7 @@ namespace StdPaint
         /// <param name="text">The string to print.</param>
         /// <param name="color">The color to assign to the text.</param>
         /// <param name="alignment">The alignment of the string.</param>
-        public void DrawString(int x, int y, string text, BufferColor color, TextAlignment alignment = TextAlignment.Left)
+        public void DrawString(int x, int y, string text, BufferColor color, Alignment alignment = Alignment.Left)
         {
             var b = _buffer;
             string[] lines = text.Split(new[] { '\n' });
@@ -668,14 +738,14 @@ namespace StdPaint
                 {
                     switch (alignment)
                     {
-                        case TextAlignment.Left:
+                        case Alignment.Left:
                             if (InBounds(x + j, y + i))
                             {
                                 b[y + i, x + j].CharData = lines[i][j];
                                 b[y + i, x + j].ForeColor = color;
                             }
                             break;
-                        case TextAlignment.Right:
+                        case Alignment.Right:
                             if (InBounds(x - len + j, y + i))
                             {
                                 b[y + i, x - len + j].CharData = lines[i][j];
@@ -694,7 +764,7 @@ namespace StdPaint
         /// <param name="y">The Y coordinate to start printing at.</param>
         /// <param name="alignment">The alinment to assign to the string.</param>
         /// <param name="args">An array of strings and attributes to print.</param>
-        public void DrawString(int x, int y, TextAlignment alignment, params object[] args)
+        public void DrawString(int x, int y, Alignment alignment, params object[] args)
         {
             var color = BufferColor.Gray;            
             foreach (var arg in args)
@@ -804,6 +874,170 @@ namespace StdPaint
                     y += dy2;
                 }
             }
+        }
+
+        /// <summary>
+        /// Draws a colored line to the buffer.
+        /// </summary>
+        /// <param name="a">The starting point of the line.</param>
+        /// <param name="b">The ending point of the line.</param>
+        /// <param name="color">The color of the line.</param>
+        public void DrawLine(Point a, Point b, BufferColor color)
+        {
+            DrawLine(a.X, a.Y, b.X, b.Y, color);
+        }
+
+        /// <summary>
+        /// Draws a line to the buffer with the specified brush.
+        /// </summary>
+        /// <param name="a">The starting point of the line.</param>
+        /// <param name="b">The ending point of the line.</param>
+        /// <param name="brush">The brush to draw the line with.</param>
+        public void DrawLine(Point a, Point b, BufferBrush brush)
+        {
+            DrawLine(a.X, a.Y, b.X, b.Y, brush);
+        }
+
+        /// <summary>
+        /// Draws a colored line to the buffer.
+        /// </summary>
+        /// <param name="a">The starting point of the line.</param>
+        /// <param name="b">The ending point of the line.</param>
+        /// <param name="color">The color of the line.</param>
+        public void DrawLine(ref Point a, ref Point b, BufferColor color)
+        {
+            DrawLine(a.X, a.Y, b.X, b.Y, color);
+        }
+
+        /// <summary>
+        /// Draws a line to the buffer with the specified brush.
+        /// </summary>
+        /// <param name="a">The starting point of the line.</param>
+        /// <param name="b">The ending point of the line.</param>
+        /// <param name="brush">The brush to draw the line with.</param>
+        public void DrawLine(ref Point a, ref Point b, BufferBrush brush)
+        {
+            DrawLine(a.X, a.Y, b.X, b.Y, brush);
+        }
+
+        /// <summary>
+        /// Draws a triangle to the buffer.
+        /// </summary>
+        /// <param name="triangle">The triangle to draw.</param>
+        /// <param name="color">The color to draw the triangle.</param>
+        public void DrawTriangle(Triangle triangle, BufferColor color)
+        {
+            DrawLine(ref triangle.A, ref triangle.B, color);
+            DrawLine(ref triangle.B, ref triangle.C, color);
+            DrawLine(ref triangle.C, ref triangle.A, color);
+        }
+
+        /// <summary>
+        /// Draws a triangle to the buffer.
+        /// </summary>
+        /// <param name="triangle">The triangle to draw.</param>
+        /// <param name="color">The color to draw the triangle.</param>
+        public void DrawTriangle(ref Triangle triangle, BufferColor color)
+        {
+            DrawLine(ref triangle.A, ref triangle.B, color);
+            DrawLine(ref triangle.B, ref triangle.C, color);
+            DrawLine(ref triangle.C, ref triangle.A, color);
+        }
+
+        /// <summary>
+        /// Draws a triangle to the buffer.
+        /// </summary>
+        /// <param name="a">The first point of the triangle.</param>
+        /// <param name="b">The second point of the triangle.</param>
+        /// <param name="c">The third point of the triangle.</param>
+        /// <param name="color">The color of the line.</param>
+        public void DrawTriangle(Point a, Point b, Point c, BufferColor color)
+        {
+            DrawLine(ref a, ref b, color);
+            DrawLine(ref b, ref c, color);
+            DrawLine(ref c, ref a, color);
+        }
+
+        /// <summary>
+        /// Draws a triangle to the buffer.
+        /// </summary>
+        /// <param name="a">The first point of the triangle.</param>
+        /// <param name="b">The second point of the triangle.</param>
+        /// <param name="c">The third point of the triangle.</param>
+        /// <param name="brush">The brush of the line.</param>
+        public void DrawTriangle(Point a, Point b, Point c, BufferBrush brush)
+        {
+            DrawLine(ref a, ref b, brush);
+            DrawLine(ref b, ref c, brush);
+            DrawLine(ref c, ref a, brush);
+        }
+
+        /// <summary>
+        /// Draws a triangle to the buffer.
+        /// </summary>
+        /// <param name="a">The first point of the triangle.</param>
+        /// <param name="b">The second point of the triangle.</param>
+        /// <param name="c">The third point of the triangle.</param>
+        /// <param name="color">The color of the line.</param>
+        public void DrawTriangle(ref Point a, ref Point b, ref Point c, BufferColor color)
+        {
+            DrawLine(ref a, ref b, color);
+            DrawLine(ref b, ref c, color);
+            DrawLine(ref c, ref a, color);
+        }
+
+        /// <summary>
+        /// Draws a triangle to the buffer.
+        /// </summary>
+        /// <param name="a">The first point of the triangle.</param>
+        /// <param name="b">The second point of the triangle.</param>
+        /// <param name="c">The third point of the triangle.</param>
+        /// <param name="brush">The brush of the line.</param>
+        public void DrawTriangle(ref Point a, ref Point b, ref Point c, BufferBrush brush)
+        {
+            DrawLine(ref a, ref b, brush);
+            DrawLine(ref b, ref c, brush);
+            DrawLine(ref c, ref a, brush);
+        }
+
+        /// <summary>
+        /// Draws a triangle with the specified border and fill brushes.
+        /// </summary>
+        /// <param name="triangle">The triangle to draw.</param>
+        /// <param name="border">The border brush.</param>
+        /// <param name="fill">The fill brush.</param>
+        public void DrawTriangle(Triangle triangle, BufferBrush border, BufferBrush fill)
+        {            
+            var bounds = triangle.GetBounds();
+            double area = triangle.Area;
+            Point p = new Point();
+            double sum = 0;
+            for (int i = bounds.Left; i < bounds.Right; i++)
+            for (int j = bounds.Top; j < bounds.Bottom; j++)
+            {
+                p.X = i;
+                p.Y = j;
+                sum = Triangle.GetArea(p, triangle.A, triangle.B) +
+                    Triangle.GetArea(p, triangle.B, triangle.C) +
+                    Triangle.GetArea(p, triangle.C, triangle.A);
+                if (sum >= area - 1 && sum <= area + 1)
+                {
+                    _buffer[j, i].BackColor = fill.GetColor(i, j);
+                }
+            }
+            DrawTriangle(triangle, border);
+        }
+
+        /// <summary>
+        /// Draws a triangle to the buffer.
+        /// </summary>
+        /// <param name="triangle">The triangle to draw.</param>
+        /// <param name="brush">The brush to draw the triangle with.</param>
+        public void DrawTriangle(Triangle triangle, BufferBrush brush)
+        {
+            DrawLine(ref triangle.A, ref triangle.B, brush);
+            DrawLine(ref triangle.B, ref triangle.C, brush);
+            DrawLine(ref triangle.C, ref triangle.A, brush);
         }
 
         /// <summary>

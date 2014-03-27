@@ -39,7 +39,7 @@ namespace StdPaint
         public static extern bool ScreenToClient(IntPtr hwnd, ref Point lpPoint);
 
         [DllImport("user32.dll")]
-        public static extern bool GetClientRect(IntPtr hwnd, out RECT lpRect);
+        public static extern bool GetClientRect(IntPtr hwnd, out Rectangle lpRect);
 
         [DllImport("kernel32.dll")]
         public static extern IntPtr GetConsoleWindow();

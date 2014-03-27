@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace StdPaint
 {
     /// <summary>
-    /// Conrols the alignment of text drawn to a ConsoleBuffer.
+    /// Conrols the alignment of objects drawn to a ConsoleBuffer.
     /// </summary>
-    public enum TextAlignment
+    public enum Alignment
     {
         /// <summary>
         /// Left alignment.
