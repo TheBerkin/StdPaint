@@ -16,13 +16,10 @@ namespace StdPaint
     /// </summary>
     public static class Painter
     {
-        static Thread drawThread, renderThread;
-        static IntPtr conHandle = Native.GetStdHandle(-11);
         static bool enabled;
 
-        static IntPtr _hookID = IntPtr.Zero;
-        static IntPtr consoleHandle = Native.GetConsoleWindow();
-        static WndProcCallback _proc = HookCallback;
+        static Thread drawThread, renderThread;
+        
         static Rectangle clientRect;
         static Stopwatch fpsCounter = new Stopwatch();
 
@@ -31,6 +28,17 @@ namespace StdPaint
         static int refreshInterval = 1;
 
         static ConsoleEventCallback closeEvent = ConsoleCloseEvent;
+
+        const int WH_MOUSE_LL = 14;
+        const int WH_KEYBOARD_LL = 13;
+
+        static IntPtr mouseHook, keyboardHook;
+        static WndProcCallback mouseProc = MouseHookCallback;
+        static WndProcCallback keyboardProc = KeyboardHookCallback;
+        static bool[] keyboardState = new bool[256];
+
+        static IntPtr stdOutHandle = Native.GetStdHandle(-11);
+        static IntPtr consoleHandle = Native.GetConsoleWindow();
 
         /// <summary>
         /// Raised when the back buffer is about to start redrawing.
@@ -76,6 +84,14 @@ namespace StdPaint
         /// Contains the GUI elements currently being displayed by the engine.
         /// </summary>
         public static List<Element> Elements = new List<Element>();
+        /// Raised when a key is pressed.
+        /// </summary>
+        public static event EventHandler<PainterKeyEventArgs> KeyDown;
+
+        /// <summary>
+        /// Raised when a key is released.
+        /// </summary>
+        public static event EventHandler<PainterKeyEventArgs> KeyUp;
         
 
         /// <summary>
@@ -162,7 +178,7 @@ namespace StdPaint
             renderThread = new Thread(GraphicsRenderThread);
             renderThread.Start();
 
-            AddHook();
+            AddHooks();
 
             Native.SetConsoleCtrlHandler(closeEvent, true);
 
@@ -171,20 +187,21 @@ namespace StdPaint
 
         static bool ConsoleCloseEvent(uint code)
         {
-            Native.UnhookWindowsHookEx(_hookID);
+            Native.UnhookWindowsHookEx(mouseHook);
+            Native.UnhookWindowsHookEx(keyboardHook);
             Stop();
             return false;
         }
 
-        static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
+        static IntPtr MouseHookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
             Native.GetClientRect(consoleHandle, out clientRect);
 
             if (nCode >= 0)
             {
-                var minfo = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));
+                var minfo = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));                
+                Native.ScreenToClient(Native.GetConsoleWindow(), ref minfo.Point);
                 var p = minfo.Point;
-                Native.ScreenToClient(Native.GetConsoleWindow(), ref p);
                 p.X = (int)((float)p.X * ((float)Console.BufferWidth / clientRect.Right));
                 p.Y = (int)((float)p.Y * ((float)Console.BufferHeight / clientRect.Bottom));
                 if (InBounds(p.X, p.Y))
@@ -195,7 +212,7 @@ namespace StdPaint
                             {
                                 if (MouseMove != null)
                                 {
-                                    MouseMove(null, new PainterMouseEventArgs(p));
+                                    MouseMove(null, new PainterMouseEventArgs(p, minfo.Point));
                                 }
                             }
                             break;
@@ -203,7 +220,7 @@ namespace StdPaint
                             {
                                 if (LeftButtonDown != null)
                                 {
-                                    LeftButtonDown(null, new PainterMouseEventArgs(p));
+                                    LeftButtonDown(null, new PainterMouseEventArgs(p, minfo.Point));
                                 }
                             }
                             break;
@@ -211,7 +228,7 @@ namespace StdPaint
                             {
                                 if (LeftButtonUp != null)
                                 {
-                                    LeftButtonUp(null, new PainterMouseEventArgs(p));
+                                    LeftButtonUp(null, new PainterMouseEventArgs(p, minfo.Point));
                                 }
                             }
                             break;
@@ -219,7 +236,7 @@ namespace StdPaint
                             {
                                 if (RightButtonDown != null)
                                 {
-                                    RightButtonDown(null, new PainterMouseEventArgs(p));
+                                    RightButtonDown(null, new PainterMouseEventArgs(p, minfo.Point));
                                 }
                             }
                             break;
@@ -227,7 +244,7 @@ namespace StdPaint
                             {
                                 if (RightButtonUp != null)
                                 {
-                                    RightButtonUp(null, new PainterMouseEventArgs(p));
+                                    RightButtonUp(null, new PainterMouseEventArgs(p, minfo.Point));
                                 }
                             }
                             break;
@@ -235,24 +252,55 @@ namespace StdPaint
                             {
                                 if (Scroll != null)
                                 {
-                                    Scroll(null, new PainterMouseEventArgs(p));
+                                    Scroll(null, new PainterMouseEventArgs(p, minfo.Point));
                                 }
                             }
                             break;
                     }
                 }
             }
-            return Native.CallNextHookEx(_hookID, nCode, wParam, lParam);
+            return Native.CallNextHookEx(mouseHook, nCode, wParam, lParam);
         }
 
-        const int WH_MOUSE_LL = 14;
+        static IntPtr KeyboardHookCallback(int nCode, IntPtr wParam, IntPtr lParam)
+        {
+            if (nCode >= 0)
+            {
+                var info = (KBLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(KBLLHOOKSTRUCT));
+                var flags = info.GetFlags();
+                if (flags.Released)
+                {
+                    keyboardState[info.KeyCode] = false;
+                    if (KeyUp != null)
+                    {                        
+                        KeyUp(null, new PainterKeyEventArgs((Keys)info.KeyCode));
+                    }
+                }
+                else
+                {
+                    if (!keyboardState[info.KeyCode])
+                    {
+                        keyboardState[info.KeyCode] = true;
+                        if (KeyDown != null)
+                        {                        
+                            KeyDown(null, new PainterKeyEventArgs((Keys)info.KeyCode));
+                        }
+                    }
+                }
+            }
+            return Native.CallNextHookEx(keyboardHook, nCode, wParam, lParam);
+        }
 
-        static IntPtr AddHook()
+        
+
+        static void AddHooks()
         {
             using (var process = Process.GetCurrentProcess())
             using (var module = process.MainModule)
             {
-                return Native.SetWindowsHookEx(WH_MOUSE_LL, _proc, Native.GetModuleHandle(module.ModuleName), 0);
+                IntPtr mh = Native.GetModuleHandle(module.ModuleName);
+                mouseHook = Native.SetWindowsHookEx(WH_MOUSE_LL, mouseProc, mh, 0);
+                keyboardHook = Native.SetWindowsHookEx(WH_KEYBOARD_LL, keyboardProc, mh, 0);
             }
         }
 
@@ -314,7 +362,7 @@ namespace StdPaint
             while (enabled)
             {
                 fpsCounter.Restart();
-                Native.WriteConsoleOutput(conHandle, fb, cTo, cFrom, ref rect);
+                Native.WriteConsoleOutput(stdOutHandle, fb, cTo, cFrom, ref rect);
                 Thread.Sleep(refreshInterval);
                 fpsCounter.Stop();
             }
