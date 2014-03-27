@@ -13,9 +13,24 @@ namespace StdPaint
     [StructLayout(LayoutKind.Sequential)]
     public struct Rectangle // RECT
     {
+        /// <summary>
+        /// The left bound.
+        /// </summary>
         public int Left;
+
+        /// <summary>
+        /// The top bound.
+        /// </summary>
         public int Top;
+
+        /// <summary>
+        /// The right bound.
+        /// </summary>
         public int Right;
+
+        /// <summary>
+        /// The bottom bound.
+        /// </summary>
         public int Bottom;
 
         /// <summary>
