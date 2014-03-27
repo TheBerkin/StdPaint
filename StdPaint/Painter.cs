@@ -16,6 +16,7 @@ namespace StdPaint
     /// </summary>
     public static class Painter
     {
+        #region Private fields
         static bool enabled;
 
         static Thread drawThread, renderThread;
@@ -26,7 +27,9 @@ namespace StdPaint
         static ConsoleBuffer backBuffer, frontBuffer, activeBuffer = null;
 
         static int refreshInterval = 1;
+        #endregion
 
+        #region Hook/Interop stuff
         static ConsoleEventCallback closeEvent = ConsoleCloseEvent;
 
         const int WH_MOUSE_LL = 14;
@@ -39,7 +42,9 @@ namespace StdPaint
 
         static IntPtr stdOutHandle = Native.GetStdHandle(-11);
         static IntPtr consoleHandle = Native.GetConsoleWindow();
+        #endregion
 
+        #region Event handlers
         /// <summary>
         /// Raised when the back buffer is about to start redrawing.
         /// </summary>
@@ -79,11 +84,7 @@ namespace StdPaint
         /// Raised when the scroll wheel is moved.
         /// </summary>
         public static event EventHandler<PainterMouseEventArgs> Scroll;
-
-        /// <summary>
-        /// Contains the GUI elements currently being displayed by the engine.
-        /// </summary>
-        public static List<Element> Elements = new List<Element>();
+        
         /// Raised when a key is pressed.
         /// </summary>
         public static event EventHandler<PainterKeyEventArgs> KeyDown;
@@ -92,7 +93,23 @@ namespace StdPaint
         /// Raised when a key is released.
         /// </summary>
         public static event EventHandler<PainterKeyEventArgs> KeyUp;
-        
+
+        #endregion
+
+        #region Public fields/properties
+
+        /// <summary>
+        /// Contains the GUI elements currently being displayed by the engine.
+        /// </summary>
+        public static List<Element> Elements = new List<Element>();
+
+        /// <summary>
+        /// Gets a boolean value indicating if the Painter is active.
+        /// </summary>
+        public static bool Enabled
+        {
+            get { return enabled; }
+        }
 
         /// <summary>
         /// Gets the active buffer.
@@ -146,44 +163,9 @@ namespace StdPaint
             }
         }
 
-        /// <summary>
-        /// Starts the Painter with the specified size and refresh rate.
-        /// </summary>
-        /// <param name="width">The width of the console, in units.</param>
-        /// <param name="height">The height of the console, in units.</param>
-        /// <param name="bufferRefreshRate">The refresh rate for the back buffer.</param>
-        public static void Run(int width, int height, int bufferRefreshRate)
-        {
-            Console.CursorVisible = false;
-            Console.SetWindowSize(width, height);
-            Console.SetBufferSize(width, height);
+        #endregion
 
-            backBuffer = activeBuffer = ConsoleBuffer.CreateScreenBuffer();
-            frontBuffer = ConsoleBuffer.CreateScreenBuffer();
-
-            refreshInterval = bufferRefreshRate;
-
-            if (Starting != null)
-            {
-                Starting(null, null);
-            }
-
-            enabled = true;
-
-            drawThread = null;
-            drawThread = new Thread(GraphicsDrawThread);
-            drawThread.Start();
-
-            renderThread = null;
-            renderThread = new Thread(GraphicsRenderThread);
-            renderThread.Start();
-
-            AddHooks();
-
-            Native.SetConsoleCtrlHandler(closeEvent, true);
-
-            Application.Run();
-        }
+        #region Hook methods
 
         static bool ConsoleCloseEvent(uint code)
         {
@@ -291,8 +273,6 @@ namespace StdPaint
             return Native.CallNextHookEx(keyboardHook, nCode, wParam, lParam);
         }
 
-        
-
         static void AddHooks()
         {
             using (var process = Process.GetCurrentProcess())
@@ -304,23 +284,10 @@ namespace StdPaint
             }
         }
 
-        /// <summary>
-        /// Gets a boolean value indicating if the Painter is active.
-        /// </summary>
-        public static bool Enabled
-        {
-            get { return enabled; }
-        }
+        #endregion
 
-        /// <summary>
-        /// Clears the active buffer to the specified attributes.
-        /// </summary>
-        /// <param name="clearColor">The attributes to fill the buffer with.</param>
-        public static void Clear(BufferColor clearColor = BufferColor.Black)
-        {
-            ActiveBuffer.Clear(clearColor);
-        }
-        
+        #region Threads
+
         private static void GraphicsDrawThread()
         {
             var bb = backBuffer.Buffer;
@@ -338,7 +305,7 @@ namespace StdPaint
                             Paint(null, null);
                         }
 
-                        foreach(var element in Elements)
+                        foreach (var element in Elements)
                         {
                             element.Draw();
                         }
@@ -351,7 +318,7 @@ namespace StdPaint
         }
 
         private static void GraphicsRenderThread()
-        {     
+        {
             int w = Console.BufferWidth;
             int h = Console.BufferHeight;
             COORD cFrom = new COORD(0, 0);
@@ -368,9 +335,45 @@ namespace StdPaint
             }
         }
 
-        private static bool InBounds(int x, int y)
+        #endregion
+
+        /// <summary>
+        /// Starts the Painter with the specified size and refresh rate.
+        /// </summary>
+        /// <param name="width">The width of the console, in units.</param>
+        /// <param name="height">The height of the console, in units.</param>
+        /// <param name="bufferRefreshRate">The refresh rate for the back buffer.</param>
+        public static void Run(int width, int height, int bufferRefreshRate)
         {
-            return x >= 0 && x < ActiveBuffer.Width && y >= 0 && y < ActiveBuffer.Height;
+            Console.CursorVisible = false;
+            Console.SetWindowSize(width, height);
+            Console.SetBufferSize(width, height);
+
+            backBuffer = activeBuffer = ConsoleBuffer.CreateScreenBuffer();
+            frontBuffer = ConsoleBuffer.CreateScreenBuffer();
+
+            refreshInterval = bufferRefreshRate;
+
+            if (Starting != null)
+            {
+                Starting(null, null);
+            }
+
+            enabled = true;
+
+            drawThread = null;
+            drawThread = new Thread(GraphicsDrawThread);
+            drawThread.Start();
+
+            renderThread = null;
+            renderThread = new Thread(GraphicsRenderThread);
+            renderThread.Start();
+
+            AddHooks();
+
+            Native.SetConsoleCtrlHandler(closeEvent, true);
+
+            Application.Run();
         }
 
         /// <summary>
@@ -380,6 +383,20 @@ namespace StdPaint
         {
             enabled = false;
             Application.Exit();
+        }
+
+        /// <summary>
+        /// Clears the active buffer to the specified attributes.
+        /// </summary>
+        /// <param name="clearColor">The attributes to fill the buffer with.</param>
+        public static void Clear(BufferColor clearColor = BufferColor.Black)
+        {
+            ActiveBuffer.Clear(clearColor);
+        }
+
+        private static bool InBounds(int x, int y)
+        {
+            return x >= 0 && x < ActiveBuffer.Width && y >= 0 && y < ActiveBuffer.Height;
         }
     }
 }
