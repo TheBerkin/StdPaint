@@ -33,19 +33,13 @@ namespace StdPaint.GUI
 
         internal Element()
         {
-            Painter.Paint += Painter_Paint;
             _rect = new Rectangle();
-        }
-
-        private void Painter_Paint(object sender, EventArgs e)
-        {
-            Draw();
         }
 
         /// <summary>
         /// Called when the Element is ready to be drawn.
         /// </summary>
-        protected virtual void Draw()
+        internal virtual void Draw()
         {
 
         }
@@ -55,7 +49,7 @@ namespace StdPaint.GUI
         /// </summary>
         public void Dispose()
         {
-            Painter.Paint -= Painter_Paint;
+            
         }
     }
 }

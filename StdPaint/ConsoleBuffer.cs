@@ -592,7 +592,7 @@ namespace StdPaint
         /// <param name="fill">The fill brush of the box.</param>
         public void DrawBox(Rectangle rectangle, int thickness, BufferBrush border, BufferBrush fill)
         {
-            DrawBox(rectangle.Top, rectangle.Left, rectangle.Width, rectangle.Height, thickness, border, fill);
+            DrawBox(rectangle.Left, rectangle.Top, rectangle.Width, rectangle.Height, thickness, border, fill);
         }
 
         /// <summary>

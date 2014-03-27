@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
+using StdPaint.GUI;
 
 namespace StdPaint
 {
@@ -70,6 +71,11 @@ namespace StdPaint
         /// Raised when the scroll wheel is moved.
         /// </summary>
         public static event EventHandler<PainterMouseEventArgs> Scroll;
+
+        /// <summary>
+        /// Contains the GUI elements currently being displayed by the engine.
+        /// </summary>
+        public static List<Element> Elements = new List<Element>();
         
 
         /// <summary>
@@ -282,6 +288,11 @@ namespace StdPaint
                         if (Paint != null)
                         {
                             Paint(null, null);
+                        }
+
+                        foreach(var element in Elements)
+                        {
+                            element.Draw();
                         }
 
                         Native.CopyMemory(fbPtr, bbPtr, length);
