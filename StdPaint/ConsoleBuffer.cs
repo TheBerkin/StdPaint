@@ -743,7 +743,8 @@ namespace StdPaint
             int numerator = longest >> 1;
             for (int i = 0; i <= longest; i++)
             {
-                b[y, x].BackColor = color;
+                if (!(y < 0 || y >= this.Height || x < 0 || x >= this.Width))
+                    b[y, x].BackColor = color;
                 numerator += shortest;
                 if (!(numerator < longest))
                 {
@@ -788,7 +789,8 @@ namespace StdPaint
             int numerator = longest >> 1;
             for (int i = 0; i <= longest; i++)
             {
-                b[y, x].BackColor = brush.GetColor(x,y);
+                if (!(y < 0 || y >= this.Height || x < 0 || x >= this.Width))
+                    b[y, x].BackColor = brush.GetColor(x,y);
                 numerator += shortest;
                 if (!(numerator < longest))
                 {

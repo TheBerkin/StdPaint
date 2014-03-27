@@ -54,11 +54,16 @@
     <Compile Include="BufferColor.cs" />
     <Compile Include="BufferDrawMode.cs" />
     <Compile Include="BufferUnitInfo.cs" />
+    <Compile Include="Camera.cs" />
     <Compile Include="CheckeredBufferBrush.cs" />
     <Compile Include="ConsoleBuffer.cs" />
     <Compile Include="BufferUnitAttributes.cs" />
     <Compile Include="COORD.cs" />
     <Compile Include="HorizontalStripeBufferBrush.cs" />
+    <Compile Include="Matrix.cs" />
+    <Compile Include="Primitives.cs" />
+    <Compile Include="Quaternion.cs" />
+    <Compile Include="Vector.cs" />
     <Compile Include="MouseMessages.cs" />
     <Compile Include="MSLLHOOKSTRUCT.cs" />
     <Compile Include="Native.cs" />
@@ -67,6 +72,8 @@
     <Compile Include="Point.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RECT.cs" />
+    <Compile Include="Renderer.cs" />
+    <Compile Include="Scene.cs" />
     <Compile Include="SMALL_RECT.cs" />
     <Compile Include="SolidBufferBrush.cs" />
     <Compile Include="TextAlignment.cs" />
@@ -75,6 +82,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
