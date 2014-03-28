@@ -10,7 +10,7 @@ namespace ImageExample
 {
     class Program
     {
-        static ConsoleImage image;
+        static ConsoleBuffer image;
         static int x, y;
 
         [STAThread]
@@ -26,7 +26,7 @@ namespace ImageExample
             Console.WriteLine("This program works best with a small, square font. Please change your settings, then press a key...");
             Console.ReadKey();
 
-            image = new ConsoleImage(open.FileName);
+            image = ImageLoader.FromFile(open.FileName);
 
             Painter.Starting += Painter_Starting;
             Painter.Paint += Painter_Paint;
@@ -42,7 +42,7 @@ namespace ImageExample
 
         static void Painter_Paint(object sender, EventArgs e)
         {
-            image.Draw(x, y, Painter.BackBuffer);
+            Painter.BackBuffer.DrawBuffer(image, x, y, BufferDrawMode.IgnoreBlack);
         }
     }
 }
