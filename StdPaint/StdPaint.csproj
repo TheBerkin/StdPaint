@@ -40,7 +40,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EasyIO">
-      <HintPath>..\..\..\Visual Studio 2013\Projects\EasyIO\EasyIO\bin\Release\EasyIO.dll</HintPath>
+      <HintPath>..\..\EasyIO-master\EasyIO\bin\Debug\EasyIO.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -62,7 +62,7 @@
     <Compile Include="ConsoleBuffer.cs" />
     <Compile Include="BufferUnitAttributes.cs" />
     <Compile Include="COORD.cs" />
-    <Compile Include="GUI\Button.cs" />
+    <Compile Include="ConsoleImage.cs" />
     <Compile Include="SevenSegmentDisplay.cs" />
     <Compile Include="GUI\Element.cs" />
     <Compile Include="HorizontalStripeBufferBrush.cs" />
@@ -80,7 +80,6 @@
     <Compile Include="PainterMouseEventArgs.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RECT.cs" />
     <Compile Include="Renderer.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="RandomColorBufferBrush.cs" />
