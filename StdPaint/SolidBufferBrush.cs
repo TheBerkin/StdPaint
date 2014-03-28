@@ -31,6 +31,12 @@ namespace StdPaint
             _color = color;
         }
 
+        /// <summary>
+        /// Gets the color of the brush at the specified coordinates.
+        /// </summary>
+        /// <param name="x">The X coordinate.</param>
+        /// <param name="y">The Y coordinate.</param>
+        /// <returns></returns>
         public override BufferColor GetColor(int x, int y)
         {
             return _color;

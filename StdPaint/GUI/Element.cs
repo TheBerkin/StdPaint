@@ -11,10 +11,13 @@ namespace StdPaint.GUI
     /// </summary>
     public abstract class Element : IDisposable
     {
+        /// <summary>
+        /// The rectangle that this Element is bound to.
+        /// </summary>
         protected Rectangle _rect;
 
         /// <summary>
-        /// The rectangle that this Element is bound to.
+        /// Gets or sets the rectangle that this Element is bound to.
         /// </summary>
         public Rectangle Bounds
         {

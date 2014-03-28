@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 namespace StdPaint
 {
-    static class Native
+    internal static class Native
     {
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern IntPtr SetWindowsHookEx(int idHook, WndProcCallback lpfn, IntPtr hMod, uint dwThreadId);
@@ -57,11 +57,14 @@ namespace StdPaint
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetForegroundWindow();
+
         [DllImport("kernel32.dll")]
         public static extern uint GetLastError();
     }
     
-    public static class HWND
+    internal static class HWND
     {
         public static IntPtr
         NoTopMost = new IntPtr(-2),
@@ -70,7 +73,7 @@ namespace StdPaint
         Bottom = new IntPtr(1);
     }
     
-    public static class SWP
+    internal static class SWP
     {
         public static readonly uint
         NOSIZE = 0x0001,

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace StdPaint
 {
     /// <summary>
-    /// Provides rendering capabilities for a 4x8 seven-segment display.
+    /// Provides rendering capabilities for a 4x7 seven-segment display.
     /// </summary>
     public class SevenSegmentDisplay
     {

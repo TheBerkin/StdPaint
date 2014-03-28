@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Windows.Forms;
 using StdPaint;
 
 namespace DrawingExample
@@ -13,6 +14,7 @@ namespace DrawingExample
     {
         static ConsoleBuffer paintBuffer;
 
+        [STAThread]
         static void Main(string[] args)
         {
             Console.Title = "StdPaint Drawing Example";
@@ -26,8 +28,54 @@ namespace DrawingExample
             Painter.LeftButtonDown += Painter_LeftButtonDown;
             Painter.LeftButtonUp += Painter_LeftButtonUp;
             Painter.RightButtonDown += Painter_RightButtonDown;
+            Painter.KeyDown += Painter_KeyDown;
 
             Painter.Run(136, 100, 12);
+        }
+
+        static void Painter_KeyDown(object sender, PainterKeyEventArgs e)
+        {
+            if (Painter.IsKeyDown(Keys.LControlKey))
+            {
+                if (e.KeyCode == Keys.S)
+                {
+                    SaveFileDialog dialog = new SaveFileDialog()
+                    {
+                        Filter = "Console buffer files|*.cbuf",
+                        Title = "Save Drawing Buffer"
+                    };
+                    if (dialog.ShowDialog() == DialogResult.OK)
+                    {
+                        try
+                        {
+                            paintBuffer.Save(dialog.FileName);
+                        }
+                        catch(Exception ex)
+                        {
+                            MessageBox.Show("Error while saving:\n" + ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+                else if (e.KeyCode == Keys.O)
+                {
+                    OpenFileDialog dialog = new OpenFileDialog()
+                    {
+                        Filter = "Console buffer files|*.cbuf",
+                        Title = "Open Drawing Buffer"
+                    };
+                    if (dialog.ShowDialog() == DialogResult.OK)
+                    {
+                        try
+                        {
+                            paintBuffer = ConsoleBuffer.FromFile(dialog.FileName);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Error while opening:\n" + ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+            }
         }
 
         static void Painter_RightButtonDown(object sender, PainterMouseEventArgs e)
@@ -68,7 +116,7 @@ namespace DrawingExample
         {
             pLast = e.UnitLocation;
 
-            if (!penOn && e.UnitLocation.X < 10 && e.UnitLocation.Y < pallette.Length * 5)
+            if (!penOn && e.UnitLocation.X < 10 && e.UnitLocation.Y < pallette.Length * 5 / 2)
             {
                 pen = e.UnitLocation.Y / 5 + (e.UnitLocation.X / 5) * 8;
             }
@@ -117,7 +165,7 @@ namespace DrawingExample
             Painter.ActiveBuffer.DrawBox(5 * (pen / 8) + 5, (pen % 8) * 5, 2, 5, pallette[pen]);
 
             // Draw framerate             
-            display.Draw(Painter.ActiveBuffer, Alignment.Right);                       
+            display.Draw(Painter.ActiveBuffer, Alignment.Right);
         }
 
         static void FPSUpdateThread()

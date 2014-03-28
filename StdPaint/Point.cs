@@ -125,5 +125,14 @@ namespace StdPaint
         {
             return new Point(a.X / b, a.Y / b);
         }
+
+        /// <summary>
+        /// Returns a string representing this Point.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("[X={0}; Y={1};]", this.X, this.Y);
+        }
     }
 }
