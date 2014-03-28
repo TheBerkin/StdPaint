@@ -180,7 +180,7 @@ namespace StdPaint
         {
             Native.GetClientRect(consoleHandle, out clientRect);
 
-            if (nCode >= 0)
+            if (nCode >= 0 && Native.GetForegroundWindow() == consoleHandle)
             {
                 var minfo = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));                
                 Native.ScreenToClient(Native.GetConsoleWindow(), ref minfo.Point);
@@ -259,7 +259,7 @@ namespace StdPaint
                         KeyUp(null, new PainterKeyEventArgs((Keys)info.KeyCode));
                     }
                 }
-                else
+                else if (Native.GetForegroundWindow() == consoleHandle) // Make sure that keystrokes aren't acknowledged when the console is out of focus.
                 {
                     if (!keyboardState[info.KeyCode])
                     {
@@ -403,6 +403,16 @@ namespace StdPaint
         {
             enabled = false;
             Application.Exit();
+        }
+
+        /// <summary>
+        /// Returns whether a specific key is pressed.
+        /// </summary>
+        /// <param name="key">The key to check.</param>
+        /// <returns></returns>
+        public static bool IsKeyDown(Keys key)
+        {
+            return keyboardState[(int)key];
         }
 
         /// <summary>

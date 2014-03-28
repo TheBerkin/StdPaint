@@ -282,7 +282,7 @@ namespace StdPaint
         /// <param name="attributes">The attributes to assign to the unit.</param>
         public void SetUnitAttributes(int x, int y, BufferUnitAttributes attributes)
         {
-            if (InBounds(x, y))
+            if (InBounds(ref x, ref y))
             {
                 _buffer[y, x]._attrs = (short)attributes;
             }
@@ -295,6 +295,7 @@ namespace StdPaint
         /// <param name="attributes">The attributes to assign to the unit.</param>
         public void SetUnitAttributes(Point point, BufferUnitAttributes attributes)
         {
+            if (!InBounds(ref point)) return;
             SetUnitAttributes(point.X, point.Y, attributes);
         }
 
@@ -305,6 +306,7 @@ namespace StdPaint
         /// <param name="color">The background color to set the unit to.</param>
         public void SetUnitBackColor(Point point, BufferColor color)
         {
+            if (!InBounds(ref point)) return;
             _buffer[point.Y, point.X].BackColor = color;
         }
 
@@ -316,6 +318,7 @@ namespace StdPaint
         /// <param name="color">The background color to set the unit to.</param>
         public void SetUnitBackColor(int x, int y, BufferColor color)
         {
+            if (!InBounds(ref x, ref y)) return;
             _buffer[y, x].BackColor = color;
         }
 
@@ -326,7 +329,7 @@ namespace StdPaint
         /// <param name="color">The foreground color to set the unit to.</param>
         public void SetUnitForeColor(Point point, BufferColor color)
         {
-            
+            if (!InBounds(ref point)) return;
             _buffer[point.Y, point.X].ForeColor = color;
         }
 
@@ -338,7 +341,7 @@ namespace StdPaint
         /// <param name="color">The foreground color to set the unit to.</param>
         public void SetUnitForeColor(int x, int y, BufferColor color)
         {
-            if (InBounds(x, y))
+            if (InBounds(ref x, ref y))
             {
                 _buffer[y, x].ForeColor = color;
             }
