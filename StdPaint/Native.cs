@@ -38,8 +38,11 @@ namespace StdPaint
         [DllImport("user32.dll")]
         public static extern bool ScreenToClient(IntPtr hwnd, ref Point lpPoint);
 
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", SetLastError = true)]
         public static extern bool GetClientRect(IntPtr hwnd, out Rectangle lpRect);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool GetWindowRect(IntPtr hwnd, out Rectangle lpRect);
 
         [DllImport("kernel32.dll")]
         public static extern IntPtr GetConsoleWindow();
@@ -49,6 +52,42 @@ namespace StdPaint
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static unsafe extern bool CopyMemory(void* dest, void* src, int size);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
+        [DllImport("kernel32.dll")]
+        public static extern uint GetLastError();
+    }
+    
+    public static class HWND
+    {
+        public static IntPtr
+        NoTopMost = new IntPtr(-2),
+        TopMost = new IntPtr(-1),
+        Top = new IntPtr(0),
+        Bottom = new IntPtr(1);
+    }
+    
+    public static class SWP
+    {
+        public static readonly uint
+        NOSIZE = 0x0001,
+        NOMOVE = 0x0002,
+        NOZORDER = 0x0004,
+        NOREDRAW = 0x0008,
+        NOACTIVATE = 0x0010,
+        DRAWFRAME = 0x0020,
+        FRAMECHANGED = 0x0020,
+        SHOWWINDOW = 0x0040,
+        HIDEWINDOW = 0x0080,
+        NOCOPYBITS = 0x0100,
+        NOOWNERZORDER = 0x0200,
+        NOREPOSITION = 0x0200,
+        NOSENDCHANGING = 0x0400,
+        DEFERERASE = 0x2000,
+        ASYNCWINDOWPOS = 0x4000;
     }
 
     internal delegate IntPtr WndProcCallback(int nCode, IntPtr wParam, IntPtr lParam);

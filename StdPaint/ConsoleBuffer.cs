@@ -351,7 +351,7 @@ namespace StdPaint
         /// <returns></returns>
         public BufferColor GetUnitForeColor(Point point)
         {
-            if (InBounds(point))
+            if (InBounds(ref point))
             {
                 return _buffer[point.Y, point.X].ForeColor;
             }
@@ -380,7 +380,7 @@ namespace StdPaint
         /// <returns></returns>
         public BufferColor GetUnitBackColor(Point point)
         {
-            if (InBounds(point))
+            if (InBounds(ref point))
             {
                 return _buffer[point.Y, point.X].BackColor;
             }
@@ -813,8 +813,10 @@ namespace StdPaint
             int numerator = longest >> 1;
             for (int i = 0; i <= longest; i++)
             {
-                if (!(y < 0 || y >= this.Height || x < 0 || x >= this.Width))
+                if (InBounds(ref x, ref y))
+                {
                     b[y, x].BackColor = color;
+                }
                 numerator += shortest;
                 if (!(numerator < longest))
                 {
@@ -859,8 +861,10 @@ namespace StdPaint
             int numerator = longest >> 1;
             for (int i = 0; i <= longest; i++)
             {
-                if (!(y < 0 || y >= this.Height || x < 0 || x >= this.Width))
-                    b[y, x].BackColor = brush.GetColor(x,y);
+                if (InBounds(ref x, ref y))
+                {
+                    b[y, x].BackColor = brush.GetColor(x, y);
+                }
                 numerator += shortest;
                 if (!(numerator < longest))
                 {
@@ -1119,7 +1123,17 @@ namespace StdPaint
             return x >= 0 && x < _width && y >= 0 && y < _height;
         }
 
+        private bool InBounds(ref int x, ref int y)
+        {
+            return x >= 0 && x < _width && y >= 0 && y < _height;
+        }
+
         private bool InBounds(Point point)
+        {
+            return point.X >= 0 && point.X < _width && point.Y >= 0 && point.Y < _height;
+        }
+
+        private bool InBounds(ref Point point)
         {
             return point.X >= 0 && point.X < _width && point.Y >= 0 && point.Y < _height;
         }
