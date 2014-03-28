@@ -85,6 +85,7 @@ namespace StdPaint
         /// </summary>
         public static event EventHandler<PainterMouseEventArgs> Scroll;
         
+        /// <summary>
         /// Raised when a key is pressed.
         /// </summary>
         public static event EventHandler<PainterKeyEventArgs> KeyDown;
@@ -349,10 +350,16 @@ namespace StdPaint
             Console.SetWindowSize(width, height);
             Console.SetBufferSize(width, height);
 
+            refreshInterval = bufferRefreshRate;
+
+
+            // Make the buffers
+
             backBuffer = activeBuffer = ConsoleBuffer.CreateScreenBuffer();
             frontBuffer = ConsoleBuffer.CreateScreenBuffer();
 
-            refreshInterval = bufferRefreshRate;
+
+            // Trigger any Starting events and set the Enabled flag to true.
 
             if (Starting != null)
             {
@@ -360,6 +367,19 @@ namespace StdPaint
             }
 
             enabled = true;
+
+
+            // Center the console window.
+
+            Rectangle windowRect = new Rectangle();
+            Native.GetWindowRect(consoleHandle, out windowRect);
+            int halfWidth = windowRect.Right / 2;
+            int halfHeight = windowRect.Bottom / 2;
+            var screenBounds = Screen.PrimaryScreen.Bounds;     
+            Native.SetWindowPos(consoleHandle, HWND.Top, screenBounds.Width / 2 - halfWidth, screenBounds.Height / 2 - halfHeight, windowRect.Width, windowRect.Height, SWP.SHOWWINDOW);
+
+
+            // Start threads, add hooks.
 
             drawThread = null;
             drawThread = new Thread(GraphicsDrawThread);

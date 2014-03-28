@@ -61,7 +61,6 @@
     <Compile Include="ConsoleBuffer.cs" />
     <Compile Include="BufferUnitAttributes.cs" />
     <Compile Include="COORD.cs" />
-    <Compile Include="GUI\Button.cs" />
     <Compile Include="SevenSegmentDisplay.cs" />
     <Compile Include="GUI\Element.cs" />
     <Compile Include="HorizontalStripeBufferBrush.cs" />
