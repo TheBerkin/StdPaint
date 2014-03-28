@@ -34,6 +34,15 @@ namespace StdPaint
         }
 
         /// <summary>
+        /// Returns a Vector2 object that contains the Point's current coordinates.
+        /// </summary>
+        /// <returns></returns>
+        public Vector2 ToVector2()
+        {
+            return new Vector2(X, Y);
+        }
+
+        /// <summary>
         /// The aquared distance from the origin.
         /// </summary>
         public int LengthSquared
