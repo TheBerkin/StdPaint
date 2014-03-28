@@ -39,6 +39,44 @@ namespace StdPaint
             C = c;
         }
 
+        /// <summary>
+        /// Gets the area of the triangle.
+        /// </summary>
+        public double Area
+        {
+            get { return GetArea(ref A, ref B, ref C); }
+        }
 
+        /// <summary>
+        /// Returns the area of the triangle made from the specified vectors.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        /// <param name="c">The third point.</param>
+        /// <returns></returns>
+        public static double GetArea(Vector2 a, Vector2 b, Vector2 c)
+        {
+            double ab = (b - a).Length;
+            double bc = (b - c).Length;
+            double ca = (c - a).Length;
+            double s = (ab + bc + ca) / 2;
+            return Math.Sqrt(s * (s - ab) * (s - bc) * (s - ca));
+        }
+
+        /// <summary>
+        /// Returns the area of the triangle made from the specified vectors.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        /// <param name="c">The third point.</param>
+        /// <returns></returns>
+        public static double GetArea(ref Vector2 a, ref Vector2 b, ref Vector2 c)
+        {
+            double ab = (b - a).Length;
+            double bc = (b - c).Length;
+            double ca = (c - a).Length;
+            double s = (ab + bc + ca) / 2;
+            return Math.Sqrt(s * (s - ab) * (s - bc) * (s - ca));
+        }
     }
 }

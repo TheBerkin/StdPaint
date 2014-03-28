@@ -45,6 +45,9 @@ namespace StdPaint
             get { return GetArea(A, B, C); }
         }
 
+        /// <summary>
+        /// Gets the center of the triangle.
+        /// </summary>
         public Vector2 Center
         {
             get { return (A + B + C).ToVector2() / 3; }

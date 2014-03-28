@@ -61,6 +61,7 @@
     <Compile Include="ConsoleBuffer.cs" />
     <Compile Include="BufferUnitAttributes.cs" />
     <Compile Include="COORD.cs" />
+    <Compile Include="Matrix.cs" />
     <Compile Include="RasterFont.cs" />
     <Compile Include="RasterFontBasicSmall.cs" />
     <Compile Include="SevenSegmentDisplay.cs" />
@@ -81,8 +82,11 @@
     <Compile Include="SMALL_RECT.cs" />
     <Compile Include="SolidBufferBrush.cs" />
     <Compile Include="Alignment.cs" />
+    <Compile Include="TextureSampleMode.cs" />
     <Compile Include="Triangle.cs" />
+    <Compile Include="TriangleF.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="Vector.cs" />
     <Compile Include="VerticalStripeBufferBrush.cs" />
   </ItemGroup>
   <ItemGroup>

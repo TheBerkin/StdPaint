@@ -14,5 +14,11 @@ namespace StdPaint
             a = b;
             b = temp;
         }
+
+        public static int Mod(int x, int m)
+        {
+            int r = x % m;
+            return r < 0 ? r + m : r;
+        }
     }
 }

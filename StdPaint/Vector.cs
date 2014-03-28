@@ -158,6 +158,28 @@ namespace StdPaint
         }
 
         /// <summary>
+        /// Returns the distance between two vectors.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns></returns>
+        public static double Distance(Vector2 a, Vector2 b)
+        {
+            return (b - a).Length;
+        }
+
+        /// <summary>
+        /// Returns the squared distance between two vectors.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns></returns>
+        public static double DistanceSquared(Vector2 a, Vector2 b)
+        {
+            return (b - a).LengthSquared;
+        }
+
+        /// <summary>
         /// Create a new Point from the Vector2.
         /// </summary>
         /// <returns>A new Point object created from the Vector2.</returns>
@@ -386,6 +408,28 @@ namespace StdPaint
             b = Vector3.Normalize(b);
             return a.X * b.X + a.Y * b.Y + a.Z * b.Z;
         }
+
+        /// <summary>
+        /// Returns the distance between two vectors.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns></returns>
+        public static double Distance(Vector3 a, Vector3 b)
+        {
+            return (b - a).Length;
+        }
+
+        /// <summary>
+        /// Returns the squared distance between two vectors.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns></returns>
+        public static double DistanceSquared(Vector3 a, Vector3 b)
+        {
+            return (b - a).LengthSquared;
+        }
     }
 
     /// <summary>
@@ -425,23 +469,49 @@ namespace StdPaint
             this.W = w;
         }
 
+        /// <summary>
+        /// Gets the magnitude of the vector.
+        /// </summary>
         public double Magnitude
         {
             get { return Math.Sqrt(X * X + Y * Y + Z * Z + W * W); }
         }
 
+        /// <summary>
+        /// Returns the Vector4 equivalent of the specified Vector3.
+        /// </summary>
+        /// <param name="a">The vector to convert.</param>
+        /// <returns></returns>
         public static Vector4 FromVector3(Vector3 a)
         {
             return new Vector4(a.X, a.Y, a.Z, 1);
         }
 
+        /// <summary>
+        /// Multiplies a Vector4 by a scalar.
+        /// </summary>
+        /// <param name="a">The scalar to multiply by.</param>
+        /// <param name="b">The Vector4 to multiply.</param>
+        /// <returns></returns>
         public static Vector4 operator *(double a, Vector4 b)
         {
             return new Vector4(b.X * a, b.Y * a, b.Z * a, b.W * a);
         }
 
+        /// <summary>
+        /// Multiplies a Vector4 by a scalar.
+        /// </summary>
+        /// <param name="a">The Vector4 to multiply.</param>
+        /// <param name="b">The scalar to multiply by.</param>
+        /// <returns></returns>
         public static Vector4 operator *(Vector4 a, double b) { return b * a; }
 
+        /// <summary>
+        /// Multiplies two vectors.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns></returns>
         public static Vector4 operator *(Vector4 a, Matrix4 b)
         {
             Vector4 final = new Vector4(

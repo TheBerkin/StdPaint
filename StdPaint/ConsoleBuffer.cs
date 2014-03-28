@@ -13,13 +13,27 @@ namespace StdPaint
     /// </summary>
     public class ConsoleBuffer
     {
-        int _width, _height;
+        #region Private fields
+        /// <summary>
+        /// Buffer dimensions
+        /// </summary>
+        readonly int _width, _height;
+
+        /// <summary>
+        /// Buffer data
+        /// </summary>
         BufferUnitInfo[,] _buffer;
+
+        #endregion
+
+        #region Public fields
 
         /// <summary>
         /// The total number of units in this buffer.
         /// </summary>
         public readonly int UnitCount;
+
+        #endregion
 
         #region Constructors
 
@@ -44,6 +58,55 @@ namespace StdPaint
             UnitCount = _buffer.Length;
         }
 
+        #endregion
+
+        #region Public methods
+
+        #region Texture functionality
+
+        /// <summary>
+        /// Returns the unit background color at the specified texture coordinates.
+        /// </summary>
+        /// <param name="u">The U coordinate.</param>
+        /// <param name="v">The V coordinate.</param>
+        /// <param name="mode">The sampling mode to use.</param>
+        /// <returns></returns>
+        public BufferColor GetColorFromUV(double u, double v, TextureSampleMode mode = TextureSampleMode.Tile)
+        {
+            switch(mode)
+            {
+                case TextureSampleMode.Clamp:
+                    if (u > 1.0)
+                    {
+                        u = 1.0;
+                    }
+                    else if (u < 0.0)
+                    {
+                        u = 0.0;
+                    }
+                    if (v > 1.0)
+                    {
+                        v = 1.0;
+                    }
+                    else if (v < 0.0)
+                    {
+                        v = 0.0;
+                    }
+                    return _buffer[(int)(v * (_height - 1)), (int)(u * (_width - 1))].BackColor;                
+                case TextureSampleMode.Explicit:
+                    if (u > 1.0 || u < 0.0 || v > 1.0 || v < 0.0)
+                    {
+                        return BufferColor.Black;
+                    }
+                    else
+                    {
+                        return _buffer[(int)(v * (_height - 1)), (int)(u * (_width - 1))].BackColor;
+                    }
+                default:
+                case TextureSampleMode.Tile:
+                    return _buffer[Utils.Mod((int)(v * _height), _height), Utils.Mod((int)(u * _width), _width)].BackColor;
+            }
+        }
         #endregion
 
         #region Static methods
@@ -1202,6 +1265,8 @@ namespace StdPaint
                     break;
             }
         }
+
+        #endregion
 
         #endregion
 
