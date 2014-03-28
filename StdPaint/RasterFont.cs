@@ -124,9 +124,12 @@ namespace StdPaint
                 {
                     for (int i = 0; i < glyphs[c].Length; i++)
                     {
+                        if (c > glyphs.Length) continue;
+                        if (glyphs[c] == null) continue;
                         pc.Y = i;
                         for(int j = 0; j < glyphs[c][i].Length; j++)
                         {
+                            if (glyphs[c][i] == null) continue;
                             if (!glyphs[c][i][j]) continue;
                             pc.X = j;
                             buffer.SetUnitBackColor(p + pc, brush.GetColor(p.X + pc.X, p.Y + pc.Y));
