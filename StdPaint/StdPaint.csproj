@@ -69,10 +69,8 @@
     <Compile Include="SevenSegmentDisplay.cs" />
     <Compile Include="GUI\Element.cs" />
     <Compile Include="HorizontalStripeBufferBrush.cs" />
-    <Compile Include="Matrix.cs" />
     <Compile Include="Primitives.cs" />
     <Compile Include="Quaternion.cs" />
-    <Compile Include="Vector.cs" />
     <Compile Include="KBLLHOOKSTRUCT.cs" />
     <Compile Include="KeyFlags.cs" />
     <Compile Include="MouseMessages.cs" />

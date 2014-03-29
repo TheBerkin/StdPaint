@@ -12,27 +12,28 @@ namespace StdPaint
     public class Face
     {
         /// <summary>
-        /// The edges of the face.
+        /// The tris of the face.
         /// </summary>
-        public Edge[] Edges;
+        public Triangle3[] Triangles;
 
         /// <summary>
-        /// Create a new Face from one or more Edges.
+        /// Create a new Face from one or more triangles.
         /// </summary>
-        /// <param name="edge">One or more Edges.</param>
-        public Face(params Edge[] edge)
+        /// <param name="tris">One or more triangles.</param>
+        public Face(params Triangle3[] tris)
         {
-            this.Edges = edge;
+            this.Triangles = tris;
         }
     }
 
     /// <summary>
     /// Represents one edge of a face.
     /// </summary>
-    public class Edge
+    public class Triangle3
     {
         public Vector4 Point1;
         public Vector4 Point2;
+        public Vector4 Point3;
         public BufferColor Color;
 
         /// <summary>
@@ -40,10 +41,11 @@ namespace StdPaint
         /// </summary>
         /// <param name="point1">The first point.</param>
         /// <param name="point2">The second point.</param>
-        public Edge(Vector3 point1, Vector3 point2, BufferColor color)
+        public Triangle3(Vector3 point1, Vector3 point2, Vector3 point3, BufferColor color)
         {
             this.Point1 = Vector4.FromVector3(point1);
             this.Point2 = Vector4.FromVector3(point2);
+            this.Point3 = Vector4.FromVector3(point3);
             this.Color = color;
         }
 
@@ -52,10 +54,11 @@ namespace StdPaint
         /// </summary>
         /// <param name="point1">The first point.</param>
         /// <param name="point2">The second point.</param>
-        public Edge(Vector4 point1, Vector4 point2, BufferColor color)
+        public Triangle3(Vector4 point1, Vector4 point2, Vector4 point3, BufferColor color)
         {
             this.Point1 = point1;
             this.Point2 = point2;
+            this.Point3 = point3;
             this.Color = color;
         }
     }
@@ -86,68 +89,8 @@ namespace StdPaint
         {
             Faces = new Face[1] {
                 new Face(
-                    new Edge(new Vector3(-1, 1, 1), new Vector3(-1, -1, 1), color),
-                    new Edge(new Vector3(-1, -1, 1), new Vector3(1, -1, 1), color),
-                    new Edge(new Vector3(1, -1, 1), new Vector3(1, 1, 1), color),
-                    new Edge(new Vector3(1, 1, 1), new Vector3(-1, 1, 1), color)
-                )
-            };
-        }
-    }
-
-    /// <summary>
-    /// Represents a six-sided cube primitive.
-    /// </summary>
-    public class Cube : Renderable
-    {
-        /// <summary>
-        /// Create a new Plane object.
-        /// </summary>
-        public Cube(BufferColor color)
-            : base()
-        {
-            Faces = new Face[6] {
-                //front
-                new Face(
-                    new Edge(new Vector3(-10, 10, -1), new Vector3(-10, -10, -1), color),
-                    new Edge(new Vector3(-10, -10, -1), new Vector3(10, -10, -1), color),
-                    new Edge(new Vector3(10, -10, -1), new Vector3(10, 10, -1), color),
-                    new Edge(new Vector3(10, 10, -1), new Vector3(-10, 10, -1), color)
-                ),
-                //back
-                new Face(
-                    new Edge(new Vector3(-10, 10, -10), new Vector3(-10, -10, -10), color),
-                    new Edge(new Vector3(-10, -10, -10), new Vector3(10, -10, -10), color),
-                    new Edge(new Vector3(10, -10, -10), new Vector3(10, 10, -10), color),
-                    new Edge(new Vector3(10, 10, -10), new Vector3(-10, 10, -10), color)
-                ),
-                //left
-                new Face(
-                    new Edge(new Vector3(-10, 10, -10), new Vector3(-10, -10, -10), color),
-                    new Edge(new Vector3(-10, -10, -10), new Vector3(-10, -10, -1), color),
-                    new Edge(new Vector3(-10, -10, -1), new Vector3(-10, 10, -1), color),
-                    new Edge(new Vector3(-10, 10, -1), new Vector3(-10, 10, -10), color)
-                ),
-                //right
-                new Face(
-                    new Edge(new Vector3(10, 10, -10), new Vector3(10, -10, -10), color),
-                    new Edge(new Vector3(10, -10, -10), new Vector3(10, -10, -1), color),
-                    new Edge(new Vector3(10, -10, -1), new Vector3(10, 10, -1), color),
-                    new Edge(new Vector3(10, 10, -1), new Vector3(10, 10, -10), color)
-                ),
-                //bottom
-                new Face(
-                    new Edge(new Vector3(-10, 10, -10), new Vector3(-10, 10, -1), color),
-                    new Edge(new Vector3(-10, 10, -1), new Vector3(10, 10, -1), color),
-                    new Edge(new Vector3(10, 10, -1), new Vector3(10, 10, -10), color),
-                    new Edge(new Vector3(10, 10, -10), new Vector3(-10, 10, -10), color)
-                ),
-                //top
-                new Face(
-                    new Edge(new Vector3(-10, -10, -10), new Vector3(-10, -10, -1), color),
-                    new Edge(new Vector3(-10, -10, -1), new Vector3(10, -10, -1), color),
-                    new Edge(new Vector3(10, -10, -1), new Vector3(10, -10, -10), color),
-                    new Edge(new Vector3(10, -10, -10), new Vector3(-10, -10, -10), color)
+                    new Triangle3(new Vector3(-1, 1, 1), new Vector3(-1, -1, 1), new Vector3(1, 1, 1), color),
+                    new Triangle3(new Vector3(-1, -1, 1), new Vector3(1, 1, 1), new Vector3(1, -1, 1), color)
                 )
             };
         }

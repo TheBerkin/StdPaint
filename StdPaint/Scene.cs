@@ -37,11 +37,12 @@ namespace StdPaint
         {
             foreach (Renderable obj in Objects)
                 foreach (Face face in obj.Faces)
-                    foreach (Edge edge in face.Edges)
+                    foreach (Triangle3 tri in face.Triangles)
                     {
-                        Vector2 point1 = ActiveCamera.ProjectVector(buffer.Width, buffer.Height, edge.Point1, obj.ModelMatrix);
-                        Vector2 point2 = ActiveCamera.ProjectVector(buffer.Width, buffer.Height, edge.Point2, obj.ModelMatrix);
-                        buffer.DrawLine((int)point1.X, (int)point1.Y, (int)point2.X, (int)point2.Y, edge.Color);
+                        Vector2 point1 = ActiveCamera.ProjectVector(buffer.Width, buffer.Height, tri.Point1, obj.ModelMatrix);
+                        Vector2 point2 = ActiveCamera.ProjectVector(buffer.Width, buffer.Height, tri.Point2, obj.ModelMatrix);
+                        Vector2 point3 = ActiveCamera.ProjectVector(buffer.Width, buffer.Height, tri.Point3, obj.ModelMatrix);
+                        buffer.DrawTriangle(point1.ToPoint(), point2.ToPoint(), point3.ToPoint(), tri.Color);
                     }
         }
     }
