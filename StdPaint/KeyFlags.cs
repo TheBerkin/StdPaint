@@ -10,11 +10,11 @@ namespace StdPaint
     class KeyFlags
     {
         private BitField bitfield;
+        private uint info;
 
         public KeyFlags(uint info)
         {
             bitfield = BitField.FromValue(info);
-
         }
 
         public bool Released

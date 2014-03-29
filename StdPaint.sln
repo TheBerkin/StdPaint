@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio Express 2012 for Windows Desktop
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StdPaint", "StdPaint\StdPaint.csproj", "{F70BA3BE-3332-4410-888E-3D6C67CCCCB6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{72088A4A-477B-4DAE-B3F6-31252CC3ADD4}"
@@ -12,6 +10,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpiralExample", "SpiralExample\SpiralExample.csproj", "{688D4517-6096-4C2A-981E-EA131DBD915C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameOfLifeExample", "GameOfLifeExample\GameOfLifeExample.csproj", "{9F8A22C2-FC49-4B86-8A7F-7DE0C4EBD7CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3DExample", "3DExample\3DExample.csproj", "{8BA4367B-4A6C-4E03-A72B-17501A17704C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageExample", "ImageExample\ImageExample.csproj", "{7E439CF8-4242-4CC7-B790-C91EAFE52F53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,14 @@ Global
 		{9F8A22C2-FC49-4B86-8A7F-7DE0C4EBD7CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F8A22C2-FC49-4B86-8A7F-7DE0C4EBD7CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F8A22C2-FC49-4B86-8A7F-7DE0C4EBD7CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BA4367B-4A6C-4E03-A72B-17501A17704C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BA4367B-4A6C-4E03-A72B-17501A17704C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BA4367B-4A6C-4E03-A72B-17501A17704C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BA4367B-4A6C-4E03-A72B-17501A17704C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E439CF8-4242-4CC7-B790-C91EAFE52F53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E439CF8-4242-4CC7-B790-C91EAFE52F53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E439CF8-4242-4CC7-B790-C91EAFE52F53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E439CF8-4242-4CC7-B790-C91EAFE52F53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -43,5 +53,7 @@ Global
 		{3D5E222A-A6FE-4A90-AE7B-126B1BB3B213} = {72088A4A-477B-4DAE-B3F6-31252CC3ADD4}
 		{688D4517-6096-4C2A-981E-EA131DBD915C} = {72088A4A-477B-4DAE-B3F6-31252CC3ADD4}
 		{9F8A22C2-FC49-4B86-8A7F-7DE0C4EBD7CA} = {72088A4A-477B-4DAE-B3F6-31252CC3ADD4}
+		{8BA4367B-4A6C-4E03-A72B-17501A17704C} = {72088A4A-477B-4DAE-B3F6-31252CC3ADD4}
+		{7E439CF8-4242-4CC7-B790-C91EAFE52F53} = {72088A4A-477B-4DAE-B3F6-31252CC3ADD4}
 	EndGlobalSection
 EndGlobal
