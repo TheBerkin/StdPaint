@@ -61,9 +61,12 @@
     <Compile Include="CheckeredBufferBrush.cs" />
     <Compile Include="ConsoleBuffer.cs" />
     <Compile Include="BufferUnitAttributes.cs" />
+    <Compile Include="ConsoleBuffer3D.cs" />
     <Compile Include="COORD.cs" />
     <Compile Include="ImageLoader.cs" />
+    <Compile Include="DepthComparison.cs" />
     <Compile Include="Matrix.cs" />
+    <Compile Include="Mesh.cs" />
     <Compile Include="RasterFont.cs" />
     <Compile Include="RasterFontBasicSmall.cs" />
     <Compile Include="SevenSegmentDisplay.cs" />
