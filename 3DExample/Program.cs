@@ -13,6 +13,7 @@ namespace _3DExample
         static Renderer renderer;
         static Scene scene;
         static Camera camera;
+        static Mesh mesh;
         static Plane plane;
         static double rotation = 0;
 
@@ -33,18 +34,19 @@ namespace _3DExample
         {
             renderer = new Renderer();
             scene = new Scene();
-            plane = new Plane(BufferColor.Magenta);
+            plane = new Plane(BufferColor.Green);
+            mesh = Mesh.FromOBJ("cube.obj");
             camera = new Camera(75, 0.1, 1000);
             scene.ActiveCamera = camera;
             renderer.ActiveScene = scene;
-            scene.Objects.Add(plane);
+            scene.Objects.Add(mesh);
         }
 
         static void Painter_Paint(object sender, EventArgs e)
         {
             rotation -= 0.05;
             Painter.BackBuffer.Clear();
-            plane.ModelMatrix = (Quaternion.Rotation(Vector3.Up, rotation) * Quaternion.Rotation(Vector3.Left, rotation)).Matrix;
+            mesh.ModelMatrix = (Quaternion.Rotation(Vector3.Up, rotation) * Quaternion.Rotation(Vector3.Left, rotation)).Matrix;
             renderer.Render(Painter.BackBuffer);
         }
 

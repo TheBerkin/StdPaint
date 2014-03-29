@@ -11,7 +11,7 @@ namespace StdPaint
     /// <summary>
     /// Represents a collection of triangles in 3D space.
     /// </summary>
-    public class Mesh
+    public class Mesh : Renderable
     {
         private Triangle3f[] _tris;
 
@@ -19,9 +19,12 @@ namespace StdPaint
         /// Creates a new Mesh from a triangle array.
         /// </summary>
         /// <param name="triangles">The triangle array to make the mesh out of.</param>
-        public Mesh(Triangle3f[] triangles)
+        public Mesh(Triangle3f[] triangles) : base()
         {
             _tris = triangles;
+            Faces = new Face[1] {
+                new Face(BufferColor.Gray, triangles)
+            };
         }
 
         /// <summary>
@@ -43,7 +46,7 @@ namespace StdPaint
                     {
                         continue;
                     }
-                    else if (CheckRegex(line, @"v\s+(?<v1>\d+(\.\d+)?)\s+(?<v2>\d+(\.\d+)?)\s+(?<v3>\d+(\.\d+)?)", out match))
+                    else if (CheckRegex(line, @"v\s+(?<v1>-?\d+(\.\d+)?)\s+(?<v2>-?\d+(\.\d+)?)\s+(?<v3>-?\d+(\.\d+)?)", out match))
                     {
                         vertices.Add(new Vector3(
                             Double.Parse(match.Groups["v1"].Value),
@@ -51,7 +54,7 @@ namespace StdPaint
                             Double.Parse(match.Groups["v3"].Value)
                             ));
                     }
-                    else if (CheckRegex(line, @"f\s+(?<v1>\d+)\s+(?<v2>\d+)\s+(?<v3>\d+)", out match))
+                    else if (CheckRegex(line, @"f\s+(?<v1>\d+)(/(\d+)?/\d?\s+)?\s+(?<v2>\d+)(/(\d+)?/\d?\s+)?\s+(?<v3>\d+)", out match))
                     {
                         triangles.Add(new Triangle3f(
                             vertices[Int32.Parse(match.Groups["v1"].Value) - 1],

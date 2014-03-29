@@ -64,10 +64,28 @@ namespace StdPaint
             Matrix4 matrix = projectionMatrix * viewMatrix;
             matrix *= model;
             Vector4 cartesian = vector * matrix;
-            cartesian.X /= cartesian.W;
-            cartesian.Y /= cartesian.W;
-            cartesian.Z /= cartesian.W;
-            return new Vector2(cartesian.X / (2 * cartesian.W) + width / 2, -cartesian.Y / (2 * cartesian.W) + height / 2);
+            if (cartesian.W != 0)
+            {
+                cartesian.X /= cartesian.W;
+                cartesian.Y /= cartesian.W;
+                cartesian.Z /= cartesian.W;
+            }
+            else
+                cartesian.W = 1;
+            return new Vector2(cartesian.X / (2 * cartesian.W) + width / 2, cartesian.Y / (2 * cartesian.W) + height / 2);
+        }
+
+        /// <summary>
+        /// Project a Vector3 onto a screen.
+        /// </summary>
+        /// <param name="width">The width of the buffer that is being rendered to.</param>
+        /// <param name="height">The height of the buffer that is being rendered to.</param>
+        /// <param name="vector">The Vector3 to project.</param>
+        /// <param name="model">The model matrix of the object that is being rendered.</param>
+        /// <returns>The projected vector.</returns>
+        public Vector2 ProjectVector(int width, int height, Vector3 vector, Matrix4 model = null)
+        {
+            return this.ProjectVector(width, height, new Vector4(vector.X, vector.Y, vector.Z, 1), model);
         }
     }
 }
