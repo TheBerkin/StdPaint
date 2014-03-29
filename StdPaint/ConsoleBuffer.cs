@@ -13,16 +13,16 @@ namespace StdPaint
     /// </summary>
     public class ConsoleBuffer
     {
-        #region Private fields
+        #region Non-public fields
         /// <summary>
         /// Buffer dimensions
         /// </summary>
-        readonly int _width, _height;
+        protected readonly int _width, _height;
 
         /// <summary>
         /// Buffer data
         /// </summary>
-        BufferUnitInfo[,] _buffer;
+        protected BufferUnitInfo[,] _buffer;
 
         #endregion
 
@@ -1270,24 +1270,24 @@ namespace StdPaint
 
         #endregion
 
-        #region Private methods
+        #region Non-public methods
 
-        private bool InBounds(int x, int y)
+        protected bool InBounds(int x, int y)
         {
             return x >= 0 && x < _width && y >= 0 && y < _height;
         }
 
-        private bool InBounds(ref int x, ref int y)
+        protected bool InBounds(ref int x, ref int y)
         {
             return x >= 0 && x < _width && y >= 0 && y < _height;
         }
 
-        private bool InBounds(Point point)
+        protected bool InBounds(Point point)
         {
             return point.X >= 0 && point.X < _width && point.Y >= 0 && point.Y < _height;
         }
 
-        private bool InBounds(ref Point point)
+        protected bool InBounds(ref Point point)
         {
             return point.X >= 0 && point.X < _width && point.Y >= 0 && point.Y < _height;
         }
