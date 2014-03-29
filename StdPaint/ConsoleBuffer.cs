@@ -13,13 +13,29 @@ namespace StdPaint
     /// </summary>
     public class ConsoleBuffer
     {
-        int _width, _height;
+        #region Private fields
+        /// <summary>
+        /// Buffer dimensions
+        /// </summary>
+        readonly int _width, _height;
+
+        /// <summary>
+        /// Buffer data
+        /// </summary>
         BufferUnitInfo[,] _buffer;
+
+        #endregion
+
+        #region Public fields
 
         /// <summary>
         /// The total number of units in this buffer.
         /// </summary>
         public readonly int UnitCount;
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// Initializes a new ConsoleBuffer instance with the specified dimensions.
@@ -42,6 +58,59 @@ namespace StdPaint
             UnitCount = _buffer.Length;
         }
 
+        #endregion
+
+        #region Public methods
+
+        #region Texture functionality
+
+        /// <summary>
+        /// Returns the unit background color at the specified texture coordinates.
+        /// </summary>
+        /// <param name="u">The U coordinate.</param>
+        /// <param name="v">The V coordinate.</param>
+        /// <param name="mode">The sampling mode to use.</param>
+        /// <returns></returns>
+        public BufferColor GetColorFromUV(double u, double v, TextureSampleMode mode = TextureSampleMode.Tile)
+        {
+            switch(mode)
+            {
+                case TextureSampleMode.Clamp:
+                    if (u > 1.0)
+                    {
+                        u = 1.0;
+                    }
+                    else if (u < 0.0)
+                    {
+                        u = 0.0;
+                    }
+                    if (v > 1.0)
+                    {
+                        v = 1.0;
+                    }
+                    else if (v < 0.0)
+                    {
+                        v = 0.0;
+                    }
+                    return _buffer[(int)(v * (_height - 1)), (int)(u * (_width - 1))].BackColor;                
+                case TextureSampleMode.Explicit:
+                    if (u > 1.0 || u < 0.0 || v > 1.0 || v < 0.0)
+                    {
+                        return BufferColor.Black;
+                    }
+                    else
+                    {
+                        return _buffer[(int)(v * (_height - 1)), (int)(u * (_width - 1))].BackColor;
+                    }
+                default:
+                case TextureSampleMode.Tile:
+                    return _buffer[Utils.Mod((int)(v * _height), _height), Utils.Mod((int)(u * _width), _width)].BackColor;
+            }
+        }
+        #endregion
+
+        #region Static methods
+
         /// <summary>
         /// Creates a buffer whose size matches the current unit dimensions of the console.
         /// </summary>
@@ -50,6 +119,32 @@ namespace StdPaint
         {
             return new ConsoleBuffer(Console.BufferWidth, Console.BufferHeight);
         }
+
+        /// <summary>
+        /// Creates a resampled copy of a console buffer using the specified dimensions.
+        /// </summary>
+        /// <param name="buffer">The buffer to be resampled.</param>
+        /// <param name="width">The width of the resampled buffer.</param>
+        /// <param name="height">The height of the resampled buffer.</param>
+        /// <returns></returns>
+        public static ConsoleBuffer ResampledCopy(ConsoleBuffer buffer, int width, int height)
+        {
+            var sb = new ConsoleBuffer(width, height);
+            double dw = ((double)buffer.Width / width);
+            double dh = ((double)buffer.Height / height);
+
+            for(int i = 0; i < width; i++)
+            for(int j = 0; j < height; j++)
+            {
+                sb._buffer[j, i].BackColor = buffer._buffer[(int)(j * dh), (int)(i * dw)].BackColor;
+            }
+
+            return sb;
+        }
+
+        #endregion
+
+        #region Saving/Loading/Cloning
 
         /// <summary>
         /// Loads buffer data from a file and returns it as a ConsoleBuffer object.
@@ -76,6 +171,17 @@ namespace StdPaint
         }
 
         /// <summary>
+        /// Returns a new ConsoleBuffer instance containing a copy of the buffer's contents.
+        /// </summary>
+        /// <returns></returns>
+        public ConsoleBuffer Clone()
+        {
+            var buffer = new ConsoleBuffer(_width, _height);
+            Array.Copy(_buffer, buffer._buffer, UnitCount);
+            return buffer;
+        }
+
+        /// <summary>
         /// Writes the buffer data to a file.
         /// </summary>
         /// <param name="path">The path to the file.</param>
@@ -93,6 +199,10 @@ namespace StdPaint
                 }
             }
         }
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Gets the array of buffer units contained in this instance.
@@ -117,6 +227,10 @@ namespace StdPaint
         {
             get { return _height; }
         }
+
+        #endregion
+
+        #region Clear
 
         /// <summary>
         /// Clears all units in the buffer, optionally specifying a color to fill the buffer with.
@@ -149,6 +263,10 @@ namespace StdPaint
                 _buffer[j, i].CharData = '\0';
             }
         }
+
+        #endregion
+
+        #region Flood fill
 
         /// <summary>
         /// Flood fills a closed region containing the specified coordinates with a color.
@@ -273,6 +391,10 @@ namespace StdPaint
                 }
             }
         }
+
+        #endregion
+
+        #region Unit manipulation
 
         /// <summary>
         /// Sets attributes for a specific unit in the buffer.
@@ -474,6 +596,10 @@ namespace StdPaint
             return attrs;
         }
 
+        #endregion
+
+        #region Boxes
+
         /// <summary>
         /// Draws a solid box with the specified dimensions to the buffer.
         /// </summary>
@@ -610,6 +736,10 @@ namespace StdPaint
             DrawBox(rectangle.Top, rectangle.Left, rectangle.Width, rectangle.Height, thickness, border, fill);
         }
 
+        #endregion
+
+        #region Circles
+
         /// <summary>
         /// Draws a solid circle to the buffer with the specified attributes.
         /// </summary>
@@ -722,6 +852,10 @@ namespace StdPaint
                 }
         }
 
+        #endregion
+
+        #region Strings
+
         /// <summary>
         /// Prints a string to the buffer with the specified attributes and alignment.
         /// </summary>
@@ -786,6 +920,10 @@ namespace StdPaint
                 }
             }
         }
+
+        #endregion
+
+        #region Lines
 
         /// <summary>
         /// Draws a line to the buffer.
@@ -927,6 +1065,9 @@ namespace StdPaint
             DrawLine(a.X, a.Y, b.X, b.Y, brush);
         }
 
+        #endregion
+
+        #region Triangles
         /// <summary>
         /// Draws a triangle to the buffer.
         /// </summary>
@@ -1047,6 +1188,10 @@ namespace StdPaint
             DrawLine(ref triangle.C, ref triangle.A, brush);
         }
 
+        #endregion
+
+        #region Buffers
+
         /// <summary>
         /// Draws the contents of another buffer onto this buffer at the specified location.
         /// </summary>
@@ -1121,6 +1266,12 @@ namespace StdPaint
             }
         }
 
+        #endregion
+
+        #endregion
+
+        #region Private methods
+
         private bool InBounds(int x, int y)
         {
             return x >= 0 && x < _width && y >= 0 && y < _height;
@@ -1140,5 +1291,7 @@ namespace StdPaint
         {
             return point.X >= 0 && point.X < _width && point.Y >= 0 && point.Y < _height;
         }
+
+        #endregion
     }
 }

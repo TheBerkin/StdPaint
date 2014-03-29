@@ -19,7 +19,7 @@ namespace StdPaint
         public Matrix4()
         {
             items = new double[16];
-            for(int i=0;i<16;i++)
+            for (int i = 0; i < 16; i++)
                 items[i] = 0;
         }
 

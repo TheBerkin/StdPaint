@@ -43,6 +43,143 @@ namespace StdPaint
         }
 
         /// <summary>
+        /// Adds two vectors.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns></returns>
+        public static Vector2 operator +(Vector2 a, Vector2 b)
+        {
+            return new Vector2(a.X + b.X, a.Y + b.Y);
+        }
+
+        /// <summary>
+        /// Subtracts two vectors.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns></returns>
+        public static Vector2 operator -(Vector2 a, Vector2 b)
+        {
+            return new Vector2(a.X - b.X, a.Y - b.Y);
+        }
+
+        /// <summary>
+        /// Multiplies two vectors.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns></returns>
+        public static Vector2 operator *(Vector2 a, Vector2 b)
+        {
+            return new Vector2(a.X * b.X, a.Y * b.Y);
+        }
+
+        /// <summary>
+        /// Multiplies a vector by a scalar.
+        /// </summary>
+        /// <param name="a">The vector to multiply.</param>
+        /// <param name="b">The scalar to multiply by.</param>
+        /// <returns></returns>
+        public static Vector2 operator *(Vector2 a, double b)
+        {
+            return new Vector2(a.X * b, a.Y * b);
+        }
+
+        /// <summary>
+        /// Divides two vectors.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns></returns>
+        public static Vector2 operator /(Vector2 a, Vector2 b)
+        {
+            return new Vector2(a.X / b.X, a.Y / b.Y);
+        }
+
+        /// <summary>
+        /// Divides a vector by a scalar.
+        /// </summary>
+        /// <param name="a">The vector to divide.</param>
+        /// <param name="b">The scalar to divide by.</param>
+        /// <returns></returns>
+        public static Vector2 operator /(Vector2 a, double b)
+        {
+            return new Vector2(a.X / b, a.Y / b);
+        }
+
+        /// <summary>
+        /// Gets the squared length of this vector.
+        /// </summary>
+        public double LengthSquared
+        {
+            get { return X * X + Y * Y; }
+        }
+
+        /// <summary>
+        /// Gets the length of this vector.
+        /// </summary>
+        public double Length
+        {
+            get { return Math.Sqrt(X * X + Y * Y); }
+        }
+
+        /// <summary>
+        /// Returns the normalized version of a vector.
+        /// </summary>
+        /// <param name="vector">The vector to normalize.</param>
+        /// <returns></returns>
+        public static Vector2 Normalize(Vector2 vector)
+        {
+            return vector / vector.Length;
+        }
+
+        /// <summary>
+        /// Returns the normalized version of a vector.
+        /// </summary>
+        /// <param name="vector">The vector to normalize.</param>
+        /// <returns></returns>
+        public static Vector2 Normalize(ref Vector2 vector)
+        {
+            return vector / vector.Length;
+        }
+
+        /// <summary>
+        /// Returns the dot product of two vectors.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns></returns>
+        public static double Dot(Vector2 a, Vector2 b)
+        {
+            a = Vector2.Normalize(ref a);
+            b = Vector2.Normalize(ref b);
+            return a.X * b.X + a.Y * b.Y;
+        }
+
+        /// <summary>
+        /// Returns the distance between two vectors.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns></returns>
+        public static double Distance(Vector2 a, Vector2 b)
+        {
+            return (b - a).Length;
+        }
+
+        /// <summary>
+        /// Returns the squared distance between two vectors.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns></returns>
+        public static double DistanceSquared(Vector2 a, Vector2 b)
+        {
+            return (b - a).LengthSquared;
+        }
+
+        /// <summary>
         /// Create a new Point from the Vector2.
         /// </summary>
         /// <returns>A new Point object created from the Vector2.</returns>
@@ -141,6 +278,12 @@ namespace StdPaint
             this.Z = z;
         }
 
+        /// <summary>
+        /// Multiplies a vector by a matrix..
+        /// </summary>
+        /// <param name="a">The vector to multiply.</param>
+        /// <param name="b">The matrix to multiply by.</param>
+        /// <returns></returns>
         public static Vector3 operator *(Vector3 a, Matrix4 b)
         {
             Vector3 final = new Vector3(
@@ -149,6 +292,143 @@ namespace StdPaint
                 a.X * b[0, 2] + a.Y * b[1, 2] + a.Z * b[2, 2]
             );
             return final;
+        }
+
+        /// <summary>
+        /// Adds two vectors.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns></returns>
+        public static Vector3 operator +(Vector3 a, Vector3 b)
+        {
+            return new Vector3(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+        }
+
+        /// <summary>
+        /// Subtracts two vectors.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns></returns>
+        public static Vector3 operator -(Vector3 a, Vector3 b)
+        {
+            return new Vector3(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+        }
+
+        /// <summary>
+        /// Multiplies two vectors.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns></returns>
+        public static Vector3 operator *(Vector3 a, Vector3 b)
+        {
+            return new Vector3(a.X * b.X, a.Y * b.Y, a.Z * b.Z);
+        }
+
+        /// <summary>
+        /// Multiplies a vector by a scalar.
+        /// </summary>
+        /// <param name="a">The vector to multiply.</param>
+        /// <param name="b">The scalar to multiply by.</param>
+        /// <returns></returns>
+        public static Vector3 operator *(Vector3 a, double b)
+        {
+            return new Vector3(a.X * b, a.Y * b, a.Z * b);
+        }
+
+        /// <summary>
+        /// Divides two vectors.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns></returns>
+        public static Vector3 operator /(Vector3 a, Vector3 b)
+        {
+            return new Vector3(a.X / b.X, a.Y / b.Y, a.Z / b.Z);
+        }
+
+        /// <summary>
+        /// Divides a vector by a scalar.
+        /// </summary>
+        /// <param name="a">The vector to divide.</param>
+        /// <param name="b">The scalar to divide by.</param>
+        /// <returns></returns>
+        public static Vector3 operator /(Vector3 a, double b)
+        {
+            return new Vector3(a.X / b, a.Y / b, a.Z / b);
+        }
+
+        /// <summary>
+        /// Gets the squared length of the vector.
+        /// </summary>
+        public double LengthSquared
+        {
+            get { return X * X + Y * Y + Z * Z; }
+        }
+
+        /// <summary>
+        /// Gets the length of the vector.
+        /// </summary>
+        public double Length
+        {
+            get { return Math.Sqrt(X * X + Y * Y + Z * Z); }
+        }
+
+        /// <summary>
+        /// Returns the normalized version of a vector.
+        /// </summary>
+        /// <param name="vector">The vector to normalize.</param>
+        /// <returns></returns>
+        public static Vector3 Normalize(Vector3 vector)
+        {
+            return vector / vector.Length;
+        }
+
+        /// <summary>
+        /// Returns the normalized version of a vector.
+        /// </summary>
+        /// <param name="vector">The vector to normalize.</param>
+        /// <returns></returns>
+        public static Vector3 Normalize(ref Vector3 vector)
+        {
+            return vector / vector.Length;
+        }
+
+        /// <summary>
+        /// Returns the dot product of two vectors.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns></returns>
+        public static double Dot(Vector3 a, Vector3 b)
+        {
+            a = Vector3.Normalize(a);
+            b = Vector3.Normalize(b);
+            return a.X * b.X + a.Y * b.Y + a.Z * b.Z;
+        }
+
+        /// <summary>
+        /// Returns the distance between two vectors.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns></returns>
+        public static double Distance(Vector3 a, Vector3 b)
+        {
+            return (b - a).Length;
+        }
+
+        /// <summary>
+        /// Returns the squared distance between two vectors.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns></returns>
+        public static double DistanceSquared(Vector3 a, Vector3 b)
+        {
+            return (b - a).LengthSquared;
         }
     }
 
@@ -189,23 +469,49 @@ namespace StdPaint
             this.W = w;
         }
 
+        /// <summary>
+        /// Gets the magnitude of the vector.
+        /// </summary>
         public double Magnitude
         {
             get { return Math.Sqrt(X * X + Y * Y + Z * Z + W * W); }
         }
 
+        /// <summary>
+        /// Returns the Vector4 equivalent of the specified Vector3.
+        /// </summary>
+        /// <param name="a">The vector to convert.</param>
+        /// <returns></returns>
         public static Vector4 FromVector3(Vector3 a)
         {
             return new Vector4(a.X, a.Y, a.Z, 1);
         }
 
+        /// <summary>
+        /// Multiplies a Vector4 by a scalar.
+        /// </summary>
+        /// <param name="a">The scalar to multiply by.</param>
+        /// <param name="b">The Vector4 to multiply.</param>
+        /// <returns></returns>
         public static Vector4 operator *(double a, Vector4 b)
         {
             return new Vector4(b.X * a, b.Y * a, b.Z * a, b.W * a);
         }
 
+        /// <summary>
+        /// Multiplies a Vector4 by a scalar.
+        /// </summary>
+        /// <param name="a">The Vector4 to multiply.</param>
+        /// <param name="b">The scalar to multiply by.</param>
+        /// <returns></returns>
         public static Vector4 operator *(Vector4 a, double b) { return b * a; }
 
+        /// <summary>
+        /// Multiplies two vectors.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns></returns>
         public static Vector4 operator *(Vector4 a, Matrix4 b)
         {
             Vector4 final = new Vector4(

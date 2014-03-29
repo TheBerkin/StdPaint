@@ -23,7 +23,7 @@ namespace StdPaint
         /// The third point in the triangle.
         /// </summary>
         public Point C;
-
+        
         /// <summary>
         /// Initializes a new instance of the Triangle struct with the supplied coordinates.
         /// </summary>
@@ -43,6 +43,14 @@ namespace StdPaint
         public double Area
         {
             get { return GetArea(A, B, C); }
+        }
+
+        /// <summary>
+        /// Gets the center of the triangle.
+        /// </summary>
+        public Vector2 Center
+        {
+            get { return (A + B + C).ToVector2() / 3; }
         }
 
         /// <summary>
