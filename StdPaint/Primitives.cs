@@ -86,10 +86,10 @@ namespace StdPaint
         {
             Faces = new Face[1] {
                 new Face(
-                    new Edge(new Vector3(-10, 10, 1), new Vector3(-10, -10, 1), color),
-                    new Edge(new Vector3(-10, -10, 1), new Vector3(10, -10, 1), color),
-                    new Edge(new Vector3(10, -10, 1), new Vector3(10, 10, 1), color),
-                    new Edge(new Vector3(10, 10, 1), new Vector3(-10, 10, 1), color)
+                    new Edge(new Vector3(-1, 1, 1), new Vector3(-1, -1, 1), color),
+                    new Edge(new Vector3(-1, -1, 1), new Vector3(1, -1, 1), color),
+                    new Edge(new Vector3(1, -1, 1), new Vector3(1, 1, 1), color),
+                    new Edge(new Vector3(1, 1, 1), new Vector3(-1, 1, 1), color)
                 )
             };
         }
@@ -109,45 +109,45 @@ namespace StdPaint
             Faces = new Face[6] {
                 //front
                 new Face(
-                    new Edge(new Vector3(-10, 10, 1), new Vector3(-10, -10, 1), color),
-                    new Edge(new Vector3(-10, -10, 1), new Vector3(10, -10, 1), color),
-                    new Edge(new Vector3(10, -10, 1), new Vector3(10, 10, 1), color),
-                    new Edge(new Vector3(10, 10, 1), new Vector3(-10, 10, 1), color)
+                    new Edge(new Vector3(-10, 10, -1), new Vector3(-10, -10, -1), color),
+                    new Edge(new Vector3(-10, -10, -1), new Vector3(10, -10, -1), color),
+                    new Edge(new Vector3(10, -10, -1), new Vector3(10, 10, -1), color),
+                    new Edge(new Vector3(10, 10, -1), new Vector3(-10, 10, -1), color)
                 ),
                 //back
                 new Face(
-                    new Edge(new Vector3(-10, 10, 5), new Vector3(-10, -10, 5), color),
-                    new Edge(new Vector3(-10, -10, 5), new Vector3(10, -10, 5), color),
-                    new Edge(new Vector3(10, -10, 5), new Vector3(10, 10, 5), color),
-                    new Edge(new Vector3(10, 10, 5), new Vector3(-10, 10, 5), color)
+                    new Edge(new Vector3(-10, 10, -10), new Vector3(-10, -10, -10), color),
+                    new Edge(new Vector3(-10, -10, -10), new Vector3(10, -10, -10), color),
+                    new Edge(new Vector3(10, -10, -10), new Vector3(10, 10, -10), color),
+                    new Edge(new Vector3(10, 10, -10), new Vector3(-10, 10, -10), color)
                 ),
                 //left
                 new Face(
-                    new Edge(new Vector3(-10, 10, 5), new Vector3(-10, -10, 5), color),
-                    new Edge(new Vector3(-10, -10, 5), new Vector3(-10, -10, 1), color),
-                    new Edge(new Vector3(-10, -10, 1), new Vector3(-10, 10, 1), color),
-                    new Edge(new Vector3(-10, 10, 1), new Vector3(-10, 10, 5), color)
+                    new Edge(new Vector3(-10, 10, -10), new Vector3(-10, -10, -10), color),
+                    new Edge(new Vector3(-10, -10, -10), new Vector3(-10, -10, -1), color),
+                    new Edge(new Vector3(-10, -10, -1), new Vector3(-10, 10, -1), color),
+                    new Edge(new Vector3(-10, 10, -1), new Vector3(-10, 10, -10), color)
                 ),
                 //right
                 new Face(
-                    new Edge(new Vector3(10, 10, 5), new Vector3(10, -10, 5), color),
-                    new Edge(new Vector3(10, -10, 5), new Vector3(10, -10, 1), color),
-                    new Edge(new Vector3(10, -10, 1), new Vector3(10, 10, 1), color),
-                    new Edge(new Vector3(10, 10, 1), new Vector3(10, 10, 5), color)
+                    new Edge(new Vector3(10, 10, -10), new Vector3(10, -10, -10), color),
+                    new Edge(new Vector3(10, -10, -10), new Vector3(10, -10, -1), color),
+                    new Edge(new Vector3(10, -10, -1), new Vector3(10, 10, -1), color),
+                    new Edge(new Vector3(10, 10, -1), new Vector3(10, 10, -10), color)
                 ),
                 //bottom
                 new Face(
-                    new Edge(new Vector3(-10, 10, 5), new Vector3(-10, 10, 1), color),
-                    new Edge(new Vector3(-10, 10, 1), new Vector3(10, 10, 1), color),
-                    new Edge(new Vector3(10, 10, 1), new Vector3(10, 10, 5), color),
-                    new Edge(new Vector3(10, 10, 5), new Vector3(-10, 10, 5), color)
+                    new Edge(new Vector3(-10, 10, -10), new Vector3(-10, 10, -1), color),
+                    new Edge(new Vector3(-10, 10, -1), new Vector3(10, 10, -1), color),
+                    new Edge(new Vector3(10, 10, -1), new Vector3(10, 10, -10), color),
+                    new Edge(new Vector3(10, 10, -10), new Vector3(-10, 10, -10), color)
                 ),
                 //top
                 new Face(
-                    new Edge(new Vector3(-10, -10, 5), new Vector3(-10, -10, 1), color),
-                    new Edge(new Vector3(-10, -10, 1), new Vector3(10, -10, 1), color),
-                    new Edge(new Vector3(10, -10, 1), new Vector3(10, -10, 5), color),
-                    new Edge(new Vector3(10, -10, 5), new Vector3(-10, -10, 5), color)
+                    new Edge(new Vector3(-10, -10, -10), new Vector3(-10, -10, -1), color),
+                    new Edge(new Vector3(-10, -10, -1), new Vector3(10, -10, -1), color),
+                    new Edge(new Vector3(10, -10, -1), new Vector3(10, -10, -10), color),
+                    new Edge(new Vector3(10, -10, -10), new Vector3(-10, -10, -10), color)
                 )
             };
         }

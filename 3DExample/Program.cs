@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using StdPaint;
+using System.Windows.Forms;
 
 namespace _3DExample
 {
@@ -24,7 +25,6 @@ namespace _3DExample
 
             Painter.Starting += Painter_Starting;
             Painter.Paint += Painter_Paint;
-            Painter.MouseMove += Painter_MouseMove;
 
             Painter.Run(64, 64, 30);
         }
@@ -34,7 +34,7 @@ namespace _3DExample
             renderer = new Renderer();
             scene = new Scene();
             plane = new Plane(BufferColor.Magenta);
-            camera = new Camera(90, 0.1, 1000);
+            camera = new Camera(75, 0.1, 1000);
             scene.ActiveCamera = camera;
             renderer.ActiveScene = scene;
             scene.Objects.Add(plane);
@@ -42,18 +42,15 @@ namespace _3DExample
 
         static void Painter_Paint(object sender, EventArgs e)
         {
+            rotation -= 0.05;
             Painter.BackBuffer.Clear();
-            plane.ModelMatrix = Quaternion.Rotation(Vector3.Up, rotation).Matrix;
+            plane.ModelMatrix = (Quaternion.Rotation(Vector3.Up, rotation) * Quaternion.Rotation(Vector3.Left, rotation)).Matrix;
             renderer.Render(Painter.BackBuffer);
         }
 
         static void Painter_MouseMove(object sender, PainterMouseEventArgs e)
         {
-            rotation = (-(double)e.UnitLocation.X / Painter.BackBuffer.Width) * 0.2 + 0.1;
-            if (rotation <= -0.1)
-                rotation = -0.09;
-            if (rotation >= 0.1)
-                rotation = 0.09;
+            rotation = (-(double)e.UnitLocation.X / Painter.BackBuffer.Width);
         }
     }
 }

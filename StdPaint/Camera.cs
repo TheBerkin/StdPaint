@@ -46,31 +46,28 @@ namespace StdPaint
         public Vector2 ProjectVector(int width, int height, Vector4 vector, Matrix4 model = null)
         {
             // different size, update projection matrix
-            /*if (width != oldWidth || height != oldHeight)
+            if (width != oldWidth || height != oldHeight)
             {
                 oldWidth = width;
                 oldHeight = height;
-                Matrix4 projection = Matrix4.Identity;
-                Matrix4 scale = Matrix4.Identity;
-                Matrix4 rotation = Matrix4.Identity;
-                Matrix4 translate = Matrix4.Identity;
-                double k = near / far;
-                projection[10] = 1 / (k - 1);
-                projection[11] = k / (k - 1);
-                projection[14] = -1;
-                projection[15] = 0;
-                scale[0] = (height / width) / far;
-                scale[5] = 1 / far;
-                scale[10] = 1 / far;
-                Vector4 n = position * (-1 / position.Magnitude);
-                //Vector4 upN = (new Vector4(0, 1, 0, 1) * n);
-                Vector4 r = upN * (1 / upN.Magnitude);
-                rotation[8] = n.X;
-                rotation[9] = n.Y;
-                rotation[10] = n.Z;
-            }*/
-            Vector4 cartesian = vector * (model * (projectionMatrix * viewMatrix));
-            return new Vector2(width * ((cartesian.X / cartesian.W + 1) / 2), height * ((cartesian.Y / cartesian.W + 1) / 2));
+                projectionMatrix = Matrix4.Identity;
+                double aspectRatio = width / height;
+                double zoomX = 1 / Math.Tan(fov / 2);
+                double zoomY = zoomX * aspectRatio;
+                projectionMatrix[0] = zoomX;
+                projectionMatrix[5] = zoomY;
+                projectionMatrix[10] = -(far + near) / (far - near);
+                projectionMatrix[11] = (-2 * near * far) / (far - near);
+                projectionMatrix[14] = -1;
+                projectionMatrix[15] = 0;
+            }
+            Matrix4 matrix = projectionMatrix * viewMatrix;
+            matrix *= model;
+            Vector4 cartesian = vector * matrix;
+            cartesian.X /= cartesian.W;
+            cartesian.Y /= cartesian.W;
+            cartesian.Z /= cartesian.W;
+            return new Vector2(cartesian.X / (2 * cartesian.W) + width / 2, -cartesian.Y / (2 * cartesian.W) + height / 2);
         }
     }
 }
