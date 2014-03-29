@@ -472,7 +472,7 @@ namespace StdPaint
         /// <summary>
         /// Gets the magnitude of the vector.
         /// </summary>
-        public double Magnitude
+        public double Length
         {
             get { return Math.Sqrt(X * X + Y * Y + Z * Z + W * W); }
         }
@@ -485,6 +485,17 @@ namespace StdPaint
         public static Vector4 FromVector3(Vector3 a)
         {
             return new Vector4(a.X, a.Y, a.Z, 1);
+        }
+
+        /// <summary>
+        /// Subtracts two vectors.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns></returns>
+        public static Vector4 operator -(Vector4 a, Vector4 b)
+        {
+            return new Vector4(a.X - b.X, a.Y - b.Y, a.Z - b.Z, a.W - b.W);
         }
 
         /// <summary>

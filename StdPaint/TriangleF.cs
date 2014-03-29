@@ -88,17 +88,17 @@ namespace StdPaint
         /// <summary>
         /// The first vector.
         /// </summary>
-        public Vector3 A;
+        public Vector4 A;
 
         /// <summary>
         /// The second vector.
         /// </summary>
-        public Vector3 B;
+        public Vector4 B;
 
         /// <summary>
         /// The third vector.
         /// </summary>
-        public Vector3 C;
+        public Vector4 C;
 
         /// <summary>
         /// Initializes a new instance of the StdPaint.Trangle3f structure with the specified vectors.
@@ -108,10 +108,24 @@ namespace StdPaint
         /// <param name="c">The third vector.</param>
         public Triangle3f(Vector3 a, Vector3 b, Vector3 c)
         {
+            A = Vector4.FromVector3(a);
+            B = Vector4.FromVector3(b);
+            C = Vector4.FromVector3(c);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the StdPaint.Trangle3f structure with the specified vectors.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <param name="c">The third vector.</param>
+        public Triangle3f(Vector4 a, Vector4 b, Vector4 c)
+        {
             A = a;
             B = b;
             C = c;
         }
+
 
         /// <summary>
         /// Gets the area of the triangle.
@@ -128,7 +142,7 @@ namespace StdPaint
         /// <param name="b">The second point.</param>
         /// <param name="c">The third point.</param>
         /// <returns></returns>
-        public static double GetArea(Vector3 a, Vector3 b, Vector3 c)
+        public static double GetArea(Vector4 a, Vector4 b, Vector4 c)
         {
             double ab = (b - a).Length;
             double bc = (b - c).Length;
@@ -144,7 +158,7 @@ namespace StdPaint
         /// <param name="b">The second point.</param>
         /// <param name="c">The third point.</param>
         /// <returns></returns>
-        public static double GetArea(ref Vector3 a, ref Vector3 b, ref Vector3 c)
+        public static double GetArea(ref Vector4 a, ref Vector4 b, ref Vector4 c)
         {
             double ab = (b - a).Length;
             double bc = (b - c).Length;
