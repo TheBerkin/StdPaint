@@ -12,53 +12,22 @@ namespace StdPaint
     public class Face
     {
         /// <summary>
-        /// The tris of the face.
+        /// The triangles of the face.
         /// </summary>
-        public Triangle3[] Triangles;
+        public Triangle3f[] Triangles;
+
+        /// <summary>
+        /// The color of the face.
+        /// </summary>
+        public BufferColor Color;
 
         /// <summary>
         /// Create a new Face from one or more triangles.
         /// </summary>
         /// <param name="tris">One or more triangles.</param>
-        public Face(params Triangle3[] tris)
+        public Face(BufferColor color, params Triangle3f[] tris)
         {
             this.Triangles = tris;
-        }
-    }
-
-    /// <summary>
-    /// Represents one edge of a face.
-    /// </summary>
-    public class Triangle3
-    {
-        public Vector4 Point1;
-        public Vector4 Point2;
-        public Vector4 Point3;
-        public BufferColor Color;
-
-        /// <summary>
-        /// Create a new edge from two vectors.
-        /// </summary>
-        /// <param name="point1">The first point.</param>
-        /// <param name="point2">The second point.</param>
-        public Triangle3(Vector3 point1, Vector3 point2, Vector3 point3, BufferColor color)
-        {
-            this.Point1 = Vector4.FromVector3(point1);
-            this.Point2 = Vector4.FromVector3(point2);
-            this.Point3 = Vector4.FromVector3(point3);
-            this.Color = color;
-        }
-
-        /// <summary>
-        /// Create a new edge from two vectors.
-        /// </summary>
-        /// <param name="point1">The first point.</param>
-        /// <param name="point2">The second point.</param>
-        public Triangle3(Vector4 point1, Vector4 point2, Vector4 point3, BufferColor color)
-        {
-            this.Point1 = point1;
-            this.Point2 = point2;
-            this.Point3 = point3;
             this.Color = color;
         }
     }
@@ -89,8 +58,9 @@ namespace StdPaint
         {
             Faces = new Face[1] {
                 new Face(
-                    new Triangle3(new Vector3(-1, 1, 1), new Vector3(-1, -1, 1), new Vector3(1, 1, 1), color),
-                    new Triangle3(new Vector3(-1, -1, 1), new Vector3(1, 1, 1), new Vector3(1, -1, 1), color)
+                    color,
+                    new Triangle3f(new Vector3(-1, 1, 1), new Vector3(-1, -1, 1), new Vector3(1, 1, 1)),
+                    new Triangle3f(new Vector3(-1, -1, 1), new Vector3(1, 1, 1), new Vector3(1, -1, 1))
                 )
             };
         }
